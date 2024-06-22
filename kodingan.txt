@@ -1,0 +1,4354 @@
+
+Option Explicit
+
+'***** User defined type
+
+Type T_MasukKhusus
+     Tanggal(1 To 31) As Date
+     id(1 To 60) As Integer
+     CountTanggal As Integer
+     CountId As Integer
+     JamMasuk As Date
+     JamKeluar As Date
+     Sebab As String
+End Type
+
+
+Type T_Prioritas_Piket
+    Tanggal(1 To 31) As Date
+    Total As Integer
+    Kegiatan As String
+End Type
+
+Type T_TanggalCountKhusus
+     Tanggal(1 To 31) As Date
+     id(1 To 60) As Integer
+     CountTanggal As Integer
+     CountId As Integer
+     JamMasuk As Date
+     JamKeluar As Date
+     Sebab As String
+End Type
+
+Type T_TanggalCountUmum
+     Tanggal(1 To 31) As Date
+     CountTanggal As Integer
+     JamMasuk As Date
+     JamKeluar As Date
+     Sebab As String
+End Type
+
+Type T_HariTidakMasukValidMinggu
+    Total As Integer
+    Izin As Integer
+    Sakit As Integer
+    Cuti As Integer
+    DLNT As Integer
+    Tanggal(1 To 7) As Date
+    Alasan(1 To 7) As String
+End Type
+
+Type T_HariAnggapMasukValidMinggu
+    Total As Integer
+    Aktif As Integer
+    Lupa As Integer
+    DLTR As Integer
+    PLTH As Integer
+    'Pengajian As Integer
+    Tanggal(1 To 7) As Date
+    Alasan(1 To 7) As String
+End Type
+
+Type T_HariTidakMasukValidBulan
+    Total As Integer
+    Izin As Integer
+    Sakit As Integer
+    Cuti As Integer
+    DLNT As Integer
+    Tanggal(1 To 31) As Date
+    Alasan(1 To 31) As String
+End Type
+
+Type T_HariAnggapMasukValidBulan
+    Total As Integer
+    Aktif As Integer
+    DLTR As Integer
+    PLTH As Integer
+    'Pengajian As Integer
+    Tanggal(1 To 31) As Date
+    Alasan(1 To 31) As String
+End Type
+
+Type T_HariAlpa
+    Tanggal() As Date
+    Alasan() As String
+    Total As Integer
+End Type
+
+Type T_HariAlpaMinggu
+    Tanggal(1 To 7) As Date
+    Alasan(1 To 7) As String
+    Total As Integer
+End Type
+
+Type T_HariAlpaBulan
+    Tanggal(1 To 31) As Date
+    Alasan(1 To 31) As String
+    Total As Integer
+End Type
+
+Type T_Insentif_Kinerja
+    HariEfektif As Integer
+    HariPiket As Integer
+    HadirTepatWaktu As Integer
+    PulangTepatWaktu As Integer
+    PiketJalankan As Integer
+    PiketHadirTepatWaktu As Integer
+    PiketPulangTepatWaktu As Integer
+    FullLokasi As Integer
+    PenguranganHariEfektif As Integer
+    PersenTepatWaktu As Double
+    PersenPulangCepat As Double
+    PersenPiketJalankan As Double
+    PersenPiketTepatWaktu As Double
+    PersenPiketPulangCepat As Double
+    PersenFullLokasi As Double
+End Type
+
+Type T_DataPerBulan
+     JumlahHari As Integer              'Jumlah hari gukar harus masuk pada bulan ini
+     JumlahMenitTelatBiasa As Double
+     JumlahHariTelatBiasa As Integer
+     JumlahMenitTelatPiket As Double
+     JumlahHariTelatPiket As Integer
+     JumlahMenitCepatBiasa As Double
+     JumlahHariCepatBiasa As Integer
+     JumlahMenitCepatPiket As Double
+     JumlahHariCepatPiket As Integer
+     JumlahMenitIKM As Double
+     JumlahHariIKM As Integer
+     JumlahHariTidakAbsenBiasa As Integer
+     JumlahHariTidakAbsenPiket As Integer
+     
+     HariTidakMasukValid As T_HariTidakMasukValidBulan  'struct that describes statistics for valid absense, _  'struct yang menggambarkan statistik untuk absensi yang valid,
+                                                        'including specific date and reason for that date. _    'termasuk tanggal dan alasan spesifik untuk tanggal tersebut,
+                                                        'Collected for the whole month, _                       'Dikumpulkan selama sebulan penuh
+     HariAnggapMasukValid As T_HariAnggapMasukValidBulan  'struct that describes statistics for valid absense, _
+                                                        'including specific date and reason for that date. _
+                                                        'Uang transport ttp dibayar. Collected for the whole month
+     HariAlpa As T_HariAlpaBulan                        'struct that describes statistics for invalid absence, _
+                                                        'including total, days and reason for that day.
+                                                        'Collected for the whole month
+     HariNonAktif As T_HariAlpaBulan                    'struct that describes statistics for nonactive days, _
+                                                        'including total, days and reason for that day.
+                                                        'Collected for the whole month
+End Type
+
+Type T_DataPerMinggu
+     JumlahHari As Integer              'Jumlah hari gukar harus masuk pada bulan ini
+     JumlahMenitTelatBiasa As Double
+     JumlahHariTelatBiasa As Integer
+     JumlahMenitTelatPiket As Double
+     JumlahHariTelatPiket As Integer
+     JumlahMenitCepatBiasa As Double
+     JumlahHariCepatBiasa As Integer
+     JumlahMenitCepatPiket As Double
+     JumlahHariCepatPiket As Integer
+     JumlahMenitIKM As Double
+     JumlahHariIKM As Integer
+     JumlahHariTidakAbsenBiasa As Integer
+     JumlahHariTidakAbsenPiket As Integer
+     
+     HariTidakMasukValid As T_HariTidakMasukValidMinggu 'struct that describes statistics for valid absense, _
+                                                        'including specific date and reason for that date. _
+                                                        'Collected for a week
+     HariAnggapMasukValid As T_HariAnggapMasukValidMinggu 'struct that describes statistics for valid absense, _
+                                                        'including specific date and reason for that date. _
+                                                        'Uang transport ttp dibayar. Collected for a week
+     HariAlpaPerMinggu As T_HariAlpaMinggu              'struct that describes statistics for invalid absence, _
+                                                        'including total, days and reason for that day.
+                                                        'Collected for a week
+     HariNonAktifPerMinggu As T_HariAlpaMinggu          'struct that describes statistics for nonactive days, _
+                                                        'including total, days and reason for that day.
+                                                        'Collected for a week
+End Type
+
+Type T_Hari_Piket
+    Total As Integer
+    hari(1 To 5) As Integer
+End Type
+
+Type T_HasilAnalisis
+     id As Integer
+     HariPiket As T_Hari_Piket
+     Nama As String
+     NRY As String
+     JamMasuk(1 To 31) As Date
+     JamKeluar(1 To 31) As Date
+     AlasanMasuk(1 To 31) As String
+     AlasanKeluar(1 To 31) As String
+     ScanMasuk(1 To 31) As Date
+     ScanKeluar(1 To 31) As Date
+     
+     Dpm(1 To 6) As T_DataPerMinggu 'Summary insiden absensi per minggu
+     Dpb As T_DataPerBulan         'Summary insiden absensi per bulan
+End Type
+
+Public Type MyType
+     MyInt As Integer
+     myString As String
+     MyDoubleArr(2) As Double
+End Type
+
+Type T_Laporan_Harian
+    id As Integer
+    Nama As String
+    Masuk As Boolean
+    AlasanTidakMasuk As String
+    Jam_Masuk As Date
+    Jam_Keluar As Date
+    AlasanJamMasukKelar As String
+    Scan_Masuk As Date
+    Scan_Keluar As Date
+    Tidak_Absen As Boolean
+    Telat_Masuk As Double
+    Cepat_Pulang As Double
+    IKM As Integer
+End Type
+Dim a As Integer
+Dim Int_Jumlah_Hari As Integer
+Dim TLH_LaporanHarian() As T_Laporan_Harian
+Dim Int_Size_Laporan_Harian As Integer
+Dim TIK_InsentifKinerja() As T_Insentif_Kinerja
+
+
+
+Dim Int_TanggalAkhirBulanIni As Integer
+Dim Int_JumlahHariPeriodeAbsensi
+Dim Adat_TanggalLibur() As Date
+Dim adat_TanggalPiketKhusus() As Date
+
+Dim TotalTanggalTidakLengkap(1 To 250) As Integer
+Dim TanggalTidakLengkap() As Date
+
+Dim TMK_MasukKhusus() As T_MasukKhusus
+Dim TTCK_TanggalCountKhusus() As T_TanggalCountKhusus
+Dim TTCK_TanggalCountKhususPrioritas() As T_TanggalCountKhusus
+Dim TTCU_TanggalCountUmum() As T_TanggalCountUmum
+
+Dim adat_TanggalKhusus() As Date
+Dim aint_IdKhusus As Integer
+
+Dim Int_HariBulanLalu As Integer
+Dim Int_JumlahHariPeriodeIni As Integer
+Dim Adat_TanggalPerMingguSatuBulan(1 To 6, 1 To 7) As Date
+Dim Adat_TanggalPeriodeIni() As Date
+Dim Int_JumlahGukar As Integer
+Dim Int_JumlahMingguBulanIni As Integer
+Dim Astr_TanggalPerMiggu() As String
+Dim Aint_JumlahTanggalPerMiggu() As Integer
+
+Dim HasilAnalisis() As T_HasilAnalisis
+Dim THA_HariTidakMasukValid() As T_HariAlpa
+Dim THA_HariAnggapMasukValid() As T_HariAlpa
+Dim THA_HariNonAktif() As T_HariAlpa
+Dim Bol_MasukKhusus As Boolean
+Dim Bol_TanggalKhusus As Boolean
+Dim Bol_TanggalKhusus_Prioritas As Boolean
+Dim Bol_TanggalUmum As Boolean
+Dim Str_Unit As String
+Dim selCuti() As String
+
+
+'Constant definition
+
+Const BARIS_JUDUL_1 As Integer = 0
+Const BARIS_JUDUL_2 As Integer = 1
+Const MULAI_KOLOM_JUDUL_UMUM As Integer = 0
+Const MULAI_KOLOM_HARI_JAM As Integer = 6
+Const SELANG_ANTARA_KOLOM_HARI_MENIT As Integer = 1
+Const SELANG_ANTARA_KOLOM_MENIT_HARI_TIDAK_MASUK As Integer = 1
+
+Function Convert_To_Persen(Persen As Double, Max As Integer) As Double
+    Dim dbl_middle As Double
+    
+    dbl_middle = Max / 2
+    
+    If Persen = 0 Then
+        Convert_To_Persen = Max
+    ElseIf Persen > 50 Then
+        Convert_To_Persen = 0
+    Else
+        Convert_To_Persen = dbl_middle
+    End If
+    
+End Function
+
+
+
+
+
+Sub Buat_Insentif_Kinerja()
+    Dim i As Integer
+    Dim int_hari_efektif_presensi As Integer
+    Dim int_hari_piket As Integer
+    Dim dbl_persen As Double
+    Dim var_arr As Variant
+    Dim table As ListObject
+    Dim tblRows As ListRows
+    Dim tblRow As ListRow
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim title1 As Range
+    Dim str_libur As String
+    
+    
+    'cari jumlah hari piket untuk guru ini
+    For i = 1 To Int_JumlahGukar
+        'search data2 guru tidak masuk, dan masukkan ke kategori piket atau non piket
+        'asumsikan juga ada tabel baru yang berisi apakah gukar ini keluar atau tidak selama jam kerja
+        int_hari_efektif_presensi = TIK_InsentifKinerja(i).HariEfektif - TIK_InsentifKinerja(i).PenguranganHariEfektif
+        int_hari_piket = TIK_InsentifKinerja(i).PenguranganHariEfektif
+        
+        'jika jumlah hari efektif presensi tidak sama dengan 0
+        If int_hari_efektif_presensi <> 0 Then
+            TIK_InsentifKinerja(i).PersenTepatWaktu = (TIK_InsentifKinerja(i).HadirTepatWaktu * 100) / int_hari_efektif_presensi
+            TIK_InsentifKinerja(i).PersenPulangCepat = (TIK_InsentifKinerja(i).PulangTepatWaktu * 100) / int_hari_efektif_presensi
+        End If
+        
+        'jika jumlah piket tidak sama dengan 0
+        If int_hari_piket <> 0 Then
+            TIK_InsentifKinerja(i).PersenPiketJalankan = (TIK_InsentifKinerja(i).PiketJalankan * 100) / int_hari_piket
+            TIK_InsentifKinerja(i).PersenPiketTepatWaktu = (TIK_InsentifKinerja(i).PiketHadirTepatWaktu * 100) / int_hari_piket
+            TIK_InsentifKinerja(i).PersenPiketPulangCepat = (TIK_InsentifKinerja(i).PiketPulangTepatWaktu * 100) / int_hari_piket
+        End If
+        
+        'jika jumlah hari efektif tidak sama dengan 0
+        'TIK_InsentifKinerja(i).PersenFullLokasi = (TIK_InsentifKinerja(i).FullLokasi * 100) / TIK_InsentifKinerja(i).HariEfektif
+        
+
+        
+       'If a > 15 Then
+               'TIK_InsentifKinerja(i).PersenFullLokasi = 0
+        'Else
+       If TIK_InsentifKinerja(i).HariEfektif > 0 Then
+           TIK_InsentifKinerja(i).PersenFullLokasi = (TIK_InsentifKinerja(i).FullLokasi * 100) / TIK_InsentifKinerja(i).HariEfektif
+       End If
+
+    Next i
+    
+    
+    Set table = Worksheets("Personal").ListObjects("T_Personal")
+    'Get all the Rows of a table
+    Set tblRows = table.ListRows
+
+    ReDim var_arr(Int_JumlahGukar + 3, 20)
+    
+    'membuat judul
+    i = 1
+    'Baris pertama
+    var_arr(0, 0) = "Nomor"
+    var_arr(0, 1) = "Nama"
+    var_arr(0, 2) = "Presensi (30%)"
+    var_arr(0, 4) = "Piket (15%)"
+    var_arr(0, 7) = "Keberadaan di Lokasi (15%)"
+    
+    'Baris kedua
+    var_arr(1, 2) = "Kehadiran tepat waktu"
+    var_arr(1, 3) = "Kepulangan tepat waktu"
+    var_arr(1, 4) = "Menjalankan piket"
+    var_arr(1, 5) = "Kehadiran tepat waktu"
+    var_arr(1, 6) = "Kepulangan tepat waktu"
+    var_arr(1, 7) = "Full di Lokasi"
+    var_arr(1, 8) = "Persen K3"
+    
+    'Baris ketiga
+    var_arr(2, 2) = "15%"
+    var_arr(2, 3) = "15%"
+    var_arr(2, 4) = "5%"
+    var_arr(2, 5) = "5%"
+    var_arr(2, 6) = "5%"
+    var_arr(2, 7) = "10%"
+    var_arr(2, 8) = "5%"
+    
+    var_arr(0, 12) = "Hari Presensi"
+    var_arr(0, 13) = "Hari Piket"
+    var_arr(0, 14) = "Jumlah Telat / Persentase"
+    var_arr(0, 15) = "Jumlah Pulang Cepat / Persentase"
+    var_arr(0, 16) = "Jumlah Tidak Piket / Persentase"
+    var_arr(0, 17) = "Jumlah Telat Piket / Persentase"
+    var_arr(0, 18) = "Jumlah Pulang Cepat Piket / Persentase"
+    var_arr(0, 19) = "Jumlah (Tidak) Full Lokasi / Persentase"
+    
+    i = 1
+    For Each tblRow In tblRows
+        'Display the value in each row for column 1
+        'The row index will always start at 1, irrespective of its
+        'position on the worksheet
+        var_arr(i + 2, 0) = i 'isi nomor
+        var_arr(i + 2, 1) = table.DataBodyRange(tblRow.index, 3) 'isi nama
+        
+        'Isi Persen Tepat Waktu
+        dbl_persen = Convert_To_Persen(TIK_InsentifKinerja(i).PersenTepatWaktu, 15)
+        var_arr(i + 2, 2) = dbl_persen 'TIK_InsentifKinerja(i).PersenTepatWaktu
+        
+        'Isi Persen Pulang Cepat
+        dbl_persen = Convert_To_Persen(TIK_InsentifKinerja(i).PersenPulangCepat, 15)
+        var_arr(i + 2, 3) = dbl_persen 'TIK_InsentifKinerja(i).PersenPulangCepat
+        
+        'Isi Persen Piket Jalankan
+        dbl_persen = Convert_To_Persen(TIK_InsentifKinerja(i).PersenPiketJalankan, 5)
+        var_arr(i + 2, 4) = dbl_persen 'TIK_InsentifKinerja(i).PersenPiketJalankan
+        
+        'Isi Persen Piket Tepat Waktu
+        dbl_persen = Convert_To_Persen(TIK_InsentifKinerja(i).PersenPiketTepatWaktu, 5)
+        var_arr(i + 2, 5) = dbl_persen 'TIK_InsentifKinerja(i).PersenPiketTepatWaktu
+        
+        'Isi Persen Piket Pulang Cepat
+        dbl_persen = Convert_To_Persen(TIK_InsentifKinerja(i).PersenPiketPulangCepat, 5)
+        var_arr(i + 2, 6) = dbl_persen 'TIK_InsentifKinerja(i).PersenPiketPulangCepat
+        
+        'Isi Persen Full Lokasi
+        'dbl_persen = 0
+        'If a > 15 Then
+           'dbl_persen = 0
+        'Else
+            dbl_persen = Convert_To_Persen(TIK_InsentifKinerja(i).PersenFullLokasi, 10)
+        'End If
+        
+        var_arr(i + 2, 7) = dbl_persen 'TIK_InsentifKinerja(i).PersenPiketPulangCepat
+        
+        'isi persen K3
+        var_arr(i + 2, 8) = 0
+        
+        'isi Hari Presensi
+        var_arr(i + 2, 12) = CStr(TIK_InsentifKinerja(i).HariEfektif - TIK_InsentifKinerja(i).PenguranganHariEfektif)
+        
+        'Isi Hari Piket
+        var_arr(i + 2, 13) = CStr(TIK_InsentifKinerja(i).PenguranganHariEfektif)
+        
+        'jumlah telat / persentase
+        var_arr(i + 2, 14) = CStr(TIK_InsentifKinerja(i).HadirTepatWaktu) + " / " + _
+                                 CStr(Format(100 - TIK_InsentifKinerja(i).PersenTepatWaktu, "#.00"))
+        'Jumlah Pulang Cepat / persentase
+        var_arr(i + 2, 15) = CStr(TIK_InsentifKinerja(i).PulangTepatWaktu) + " / " + _
+                              CStr(Format(100 - TIK_InsentifKinerja(i).PersenPulangCepat, "#.00"))
+        'Jumlah tidak piket / persentase
+        var_arr(i + 2, 16) = CStr(TIK_InsentifKinerja(i).PiketJalankan) + " / " + _
+                              CStr(Format(100 - (TIK_InsentifKinerja(i).PersenPiketJalankan * 0.5), "#.00"))
+        
+        'Jumlah telat piket / persentase
+        var_arr(i + 2, 17) = CStr(TIK_InsentifKinerja(i).PiketHadirTepatWaktu) + " / " + _
+                              CStr(Format(100 - TIK_InsentifKinerja(i).PersenPiketTepatWaktu, "#.00"))
+        
+        'Jumlah pulang cepat piket / persentase
+        var_arr(i + 2, 18) = CStr(TIK_InsentifKinerja(i).PiketPulangTepatWaktu) + " / " + _
+                              CStr(Format(100 - TIK_InsentifKinerja(i).PersenPiketPulangCepat, "#.00")) '"Jumlah Piket Pulang Tepat Waktu "
+        
+        'var_arr(i + 2, 19) = CStr(TIK_InsentifKinerja(i).PiketPulangTepatWaktu) + " / " + _
+                              CStr(Format(100 - TIK_InsentifKinerja(i).PersenPiketPulangCepat, "#.00")) '"Jumlah Piket Pulang Tepat Waktu "
+        
+        'Jumlah(tidak) full lokasi / persentase
+        'If a > 15 Then
+            'var_arr(i + 2, 19) = 0
+       'Else
+        var_arr(i + 2, 19) = CStr(TIK_InsentifKinerja(i).FullLokasi) + " / " + _
+        CStr(Format(100 - (TIK_InsentifKinerja(i).PersenFullLokasi), "#.00"))  '"Jumlah Full Lokasi "
+         'End If
+        
+        i = i + 1
+    Next
+    
+    Set wb = ActiveWorkbook
+    
+    Application.DisplayAlerts = False
+    
+Dim sh As Worksheet
+        
+        
+        
+        On Error Resume Next
+        Set sh = wb.Sheets("IIK")
+        If Err.Number <> 0 Then
+            Set ws = wb.Sheets.Add(Type:=xlWorksheet, After:=Application.ActiveSheet)
+            ws.Name = "IIK"
+            
+        Else
+            MsgBox "Sheet 'IIK' Sudah Ada, jika ingin di compile kembali maka harus di hapus!"
+            Exit Sub
+        End If
+        
+        Set title1 = ws.Range("A1")
+        title1.Resize(Int_JumlahGukar + 3, 20).Value = var_arr
+        Application.DisplayAlerts = False
+        
+        Dim tableName As String
+'       Dim tableRange As Range
+'
+'    tableName = "T_IIK"
+'    ws.ListObjects.Add(SourceType:=xlSrcRange, _
+'        Source:=title1.Resize(Int_JumlahGukar + 3, 16), _
+'        'xlListObjectHasHeaders:=xlYes _
+'        ).Name = tableName
+    'merging row untuk kolom nomor (kolom 1)
+    
+    'set seluruh cell2 laporan (kecuali blok judul)
+    With ws.Range(Cells(1, 1), Cells(Int_JumlahGukar + 3, 9))
+        'Garis batas antar cell di seluruh laporAN
+        .Borders(xlDiagonalDown).LineStyle = xlNone
+        .Borders(xlDiagonalUp).LineStyle = xlNone
+        
+        With .Borders(xlEdgeLeft)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+        
+        With .Borders(xlEdgeTop)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+        
+        With .Borders(xlEdgeBottom)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+        
+        With .Borders(xlEdgeRight)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+        
+        'Ini buat garis vertikal
+        With .Borders(xlInsideVertical)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+        
+        'Ini buat garis horizontal
+        With .Borders(xlInsideHorizontal)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+    End With
+    
+    
+    With ws.Range(Cells(1, 3), Cells(1, 4)) '"Presensi (30%)"
+        .Merge
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = True
+        .MergeCells = True
+    End With
+    
+    With ws.Range(Cells(1, 5), Cells(1, 7)) '"Piket (15%)"
+        .Merge
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = True
+        .MergeCells = True
+    End With
+    
+    With ws.Range(Cells(1, 8), Cells(1, 8)) '"Piket (15%)"
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = True
+    End With
+    
+    With ws.Range(Cells(1, 8), Cells(1, 9)) '"Piket (15%)"
+        .Merge
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .MergeCells = True
+    End With
+    
+    With ws.Range(Cells(2, 3), Cells(2, 9)) '"Piket (15%)"
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = True
+    End With
+    
+    With ws.Range(Cells(3, 3), Cells(3, 9)) '"Piket (15%)"
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+    End With
+    
+    With ws.Range(Cells(1, 1), Cells(3, 1)) '"Piket (15%)"
+        .Merge
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .MergeCells = True
+    End With
+    
+    With ws.Range(Cells(1, 2), Cells(3, 2)) '"Piket (15%)"
+        .Merge
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .MergeCells = True
+    End With
+    
+    
+    For i = 13 To 20
+    With ws.Range(Cells(1, i), Cells(3, i)) '"Piket (15%)"
+        .Merge
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .MergeCells = True
+    End With
+    Next i
+    
+    ws.Cells.EntireColumn.AutoFit
+
+    'Kolom2 yg berisi data primer (e.q S I C T PLTH) harus berukuran kecil
+'    With ws.Range("C1:P1").EntireColumn
+'        .Columns.ColumnWidth = 10
+'        .HorizontalAlignment = xlCenter
+'        .VerticalAlignment = xlBottom
+'        .WrapText = False
+'        .Orientation = 0
+'        .AddIndent = False
+'        .IndentLevel = 0
+'        .ShrinkToFit = False
+'        .ReadingOrder = xlContext
+'        .MergeCells = False
+'    End With
+
+    
+End Sub 'Buat_Worksheet_IIK
+
+
+Sub Buat_Laporan_Akhir()
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim title As Range
+    Dim title1 As Range
+    Dim i As Integer
+    Dim j As Integer
+    Dim k As Integer
+    Dim l As Integer
+    Dim m As Integer
+    Dim n As Integer
+    Dim p As Integer
+    Dim q As Integer
+    Dim s As Integer
+    Dim t As Integer
+    Dim Tanggal As Date
+    Dim str_tanggal As String
+    Dim BARIS_JUDUL_CELL_1 As Integer
+    Dim LA_MULAI_KOLOM_JUDUL_UMUM_CELL As Integer
+    Dim BARIS_DATA_PERTAMA As Integer
+    Dim var_arr As Variant
+    Dim lng_row As Long
+    lng_row = (Int_JumlahGukar * (Int_JumlahMingguBulanIni + 1)) + 4
+    Dim lng_col As Long
+    
+    Dim int_kol_nomor As Integer
+    Dim int_kol_nama As Integer
+    Dim int_kol_tgl_minggu As Integer
+    Dim int_kol_hari_efektif As Integer
+    Dim int_kol_S_sakit As Integer
+    Dim int_kol_I_izin As Integer
+    Dim int_kol_TK_A_Alpa As Integer
+    Dim int_kol_cuti As Integer
+    Dim int_kol_dlnt As Integer
+    Dim int_kol_dltr As Integer
+    Dim int_kol_plth As Integer
+    'Dim int_kol_pengajian As Integer
+    Dim int_kol_jumlah_hari_absen As Integer
+    Dim int_kol_masuk As Integer
+    Dim int_kol_DT_datang_telat As Integer
+    Dim int_kol_TA_tidak_absen As Integer
+    Dim int_kol_IKM As Integer
+    Dim int_kol_PC_pulang_cepat As Integer
+    Dim int_kol_menit_ikm As Integer
+    Dim int_kol_menit_DT_PC As Integer
+    Dim int_kol_menit_keseluruhan As Integer
+    Dim int_kol_jumlah_RP_reward_punishment As Integer
+    Dim int_kol_TP_telat_piket As Integer
+    Dim int_kol_TAP_tidak_absen_piket As Integer
+    Dim int_kol_PCP_pulang_cepat_piket As Integer
+    Dim int_kol_menit_keseluruhan_piket As Integer
+    Dim int_kol_jumlah_RPP_reward_punishment_piket As Integer
+    Dim int_kol_total_RP_reward_punishment As Integer
+    Dim int_kol_total_menit As Integer
+
+    
+    lng_col = Int_JumlahHariPeriodeIni * 6 + 20
+    
+    Const LA_MULAI_KOLOM_JUDUL_UMUM As Integer = 0
+    Const LA_BARIS_JUDUL_1 As Integer = 0
+    
+    ReDim var_arr(lng_row, 29)
+    
+    Application.ScreenUpdating = False
+    
+    'Group 1
+    'Baris pertama judul-judul
+    i = BARIS_JUDUL_1
+    
+    j = LA_MULAI_KOLOM_JUDUL_UMUM
+    int_kol_nomor = j
+    var_arr(BARIS_JUDUL_1, j) = "NO"
+    'var_arr(BARIS_JUDUL_1 + 9) = "TOTAL"
+    
+    j = j + 1
+    int_kol_nama = j
+    var_arr(BARIS_JUDUL_1, j) = "NAMA GURU/KARYAWAN"
+    
+    j = j + 1
+    int_kol_tgl_minggu = j
+    var_arr(BARIS_JUDUL_1, j) = "" 'Empty
+    var_arr(BARIS_JUDUL_1 + 1, j) = "Tgl"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "Minggu"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "" 'Empty
+    
+    j = j + 1
+    int_kol_hari_efektif = j
+    var_arr(BARIS_JUDUL_1, j) = "HARI"
+    var_arr(BARIS_JUDUL_1 + 1, j) = "EFCTF"
+    var_arr(BARIS_JUDUL_1 + 2, j) = ""
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(A)"
+    
+    'Group 2
+    j = j + 1
+    int_kol_S_sakit = j
+    var_arr(BARIS_JUDUL_1, j) = "ABSEN"
+    var_arr(BARIS_JUDUL_1 + 1, j) = "S"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(B)"
+    
+    j = j + 1
+    int_kol_I_izin = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "I"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(C)"
+    
+    j = j + 1
+    int_kol_TK_A_Alpa = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "TK/A"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(D)"
+    
+    j = j + 1
+    int_kol_cuti = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "CUTI"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(E)"
+    
+    j = j + 1
+    int_kol_dlnt = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "DLNT"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(F)"
+    
+    j = j + 1
+    int_kol_dltr = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "DLTR"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(FF)"
+    
+    j = j + 1
+    int_kol_plth = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "PLTH"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(G)"
+    
+    'Pengajian
+    'j = j + 1
+    'int_kol_pengajian = j
+    'var_arr(BARIS_JUDUL_1 + 1, j) = "Pengajian"
+    'var_arr(BARIS_JUDUL_1 + 3, j) = "(H)"
+    
+    'Group 3
+    j = j + 1
+    int_kol_jumlah_hari_absen = j
+    var_arr(BARIS_JUDUL_1, j) = "JUMLAH HARI"
+    var_arr(BARIS_JUDUL_1 + 1, j) = "ABSEN"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "(B+C+D+E+F+FF)"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(I)"
+    
+    j = j + 1
+    int_kol_masuk = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "MASUK"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "(A-I)"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(J)"
+
+    'Group 4
+    j = j + 1
+    int_kol_DT_datang_telat = j
+    var_arr(BARIS_JUDUL_1, j) = "REWARD PUNISHMENT BIASA"
+    var_arr(BARIS_JUDUL_1 + 1, j) = "DT"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(K)"
+    
+    j = j + 1
+    int_kol_TA_tidak_absen = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "TA"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(L)"
+    
+    j = j + 1
+    int_kol_IKM = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "IKM"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(M)"
+    
+    j = j + 1
+    int_kol_PC_pulang_cepat = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "PC"
+    var_arr(BARIS_JUDUL_1 + 3, j) = ""
+    
+    j = j + 1
+    int_kol_menit_ikm = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "MENIT"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "IKM"
+    var_arr(BARIS_JUDUL_1 + 3, j) = ""
+    
+    j = j + 1
+    int_kol_menit_DT_PC = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "MENIT"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "DT,PC"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(N)"
+    
+    j = j + 1
+    int_kol_menit_keseluruhan = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "JUMLAH MENIT"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "KESELURUHAN"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(O)"
+    
+    j = j + 1
+    int_kol_jumlah_RP_reward_punishment = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "JUMLAH R/P"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "(K+L+M)"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(P)"
+    
+    'Group 5
+    j = j + 1
+    int_kol_TP_telat_piket = j
+    var_arr(BARIS_JUDUL_1, j) = "REWARD PUNISHMENT PIKET"
+    var_arr(BARIS_JUDUL_1 + 1, j) = "TP"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(Q)"
+    
+    j = j + 1
+    int_kol_TAP_tidak_absen_piket = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "TAP"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(R)"
+    
+    j = j + 1
+    int_kol_PCP_pulang_cepat_piket = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "PCP"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(S)"
+    
+    j = j + 1
+    int_kol_menit_keseluruhan_piket = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "JUMLAH MENIT"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "KESELURUHAN"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(T)"
+    
+    j = j + 1
+    int_kol_jumlah_RPP_reward_punishment_piket = j
+    var_arr(BARIS_JUDUL_1 + 1, j) = "JUMLAH R/P"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "(P+Q+R)"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(U)"
+    
+    'Group 6
+    j = j + 1
+    int_kol_total_RP_reward_punishment = j
+    var_arr(BARIS_JUDUL_1, j) = "TOTAL R/P"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "(O+S)"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(V)"
+    
+    j = j + 1
+    int_kol_total_menit = j
+    var_arr(BARIS_JUDUL_1, j) = "TOTAL MENIT"
+    var_arr(BARIS_JUDUL_1 + 2, j) = "(N+R)"
+    var_arr(BARIS_JUDUL_1 + 3, j) = "(W)"
+    j = j + 1
+    lng_col = j
+    
+    ReDim Preserve var_arr(lng_row, lng_col)
+    
+    'Mulai mengisi data2
+    'Ngeloop untuk semua gukar
+    BARIS_DATA_PERTAMA = BARIS_JUDUL_1 + 4
+    k = BARIS_DATA_PERTAMA
+    For j = 1 To Int_JumlahGukar
+        var_arr(k, 0) = j
+        var_arr(k, 1) = HasilAnalisis(j).Nama
+        var_arr(k + Int_JumlahMingguBulanIni, 0) = "Total"
+        'Isi tagl hari
+        For m = 0 To Int_JumlahMingguBulanIni - 1
+            var_arr(k + m, int_kol_tgl_minggu) = Astr_TanggalPerMiggu(j, m + 1)
+            var_arr(k + m, int_kol_hari_efektif) = HasilAnalisis(j).Dpm(m + 1).JumlahHari
+            var_arr(k + m, int_kol_S_sakit) = HasilAnalisis(j).Dpm(m + 1).HariTidakMasukValid.Sakit
+            var_arr(k + m, int_kol_I_izin) = HasilAnalisis(j).Dpm(m + 1).HariTidakMasukValid.Izin
+            var_arr(k + m, int_kol_TK_A_Alpa) = HasilAnalisis(j).Dpm(m + 1).HariAlpaPerMinggu.Total
+            var_arr(k + m, int_kol_cuti) = HasilAnalisis(j).Dpm(m + 1).HariTidakMasukValid.Cuti
+            var_arr(k + m, int_kol_dlnt) = HasilAnalisis(j).Dpm(m + 1).HariTidakMasukValid.DLNT
+            var_arr(k + m, int_kol_dltr) = HasilAnalisis(j).Dpm(m + 1).HariAnggapMasukValid.DLTR
+            var_arr(k + m, int_kol_plth) = HasilAnalisis(j).Dpm(m + 1).HariAnggapMasukValid.PLTH
+            'var_arr(k + m, int_kol_pengajian) = HasilAnalisis(j).Dpm(m + 1).HariAnggapMasukValid.Pengajian
+            var_arr(k + m, int_kol_jumlah_hari_absen) = HasilAnalisis(j).Dpm(m + 1).HariTidakMasukValid.Sakit + _
+                                HasilAnalisis(j).Dpm(m + 1).HariTidakMasukValid.Izin + _
+                                HasilAnalisis(j).Dpm(m + 1).HariAlpaPerMinggu.Total + _
+                                HasilAnalisis(j).Dpm(m + 1).HariTidakMasukValid.Cuti + _
+                                HasilAnalisis(j).Dpm(m + 1).HariTidakMasukValid.DLNT + HasilAnalisis(j).Dpm(m + 1).HariAnggapMasukValid.DLTR
+            var_arr(k + m, int_kol_masuk) = HasilAnalisis(j).Dpm(m + 1).JumlahHari - var_arr(k + m, int_kol_jumlah_hari_absen)
+            
+            
+            var_arr(k + m, int_kol_DT_datang_telat) = HasilAnalisis(j).Dpm(m + 1).JumlahHariTelatBiasa
+            var_arr(k + m, int_kol_TA_tidak_absen) = HasilAnalisis(j).Dpm(m + 1).JumlahHariTidakAbsenBiasa
+            var_arr(k + m, int_kol_IKM) = HasilAnalisis(j).Dpm(m + 1).JumlahHariIKM
+            var_arr(k + m, int_kol_PC_pulang_cepat) = HasilAnalisis(j).Dpm(m + 1).JumlahHariCepatBiasa
+            var_arr(k + m, int_kol_menit_ikm) = HasilAnalisis(j).Dpm(m + 1).JumlahMenitIKM
+            var_arr(k + m, int_kol_menit_DT_PC) = HasilAnalisis(j).Dpm(m + 1).JumlahMenitTelatBiasa + _
+                                    HasilAnalisis(j).Dpm(m + 1).JumlahMenitCepatBiasa
+            var_arr(k + m, int_kol_menit_keseluruhan) = var_arr(k + m, int_kol_menit_ikm) + _
+                                                        var_arr(k + m, int_kol_menit_DT_PC)
+            var_arr(k + m, int_kol_jumlah_RP_reward_punishment) = HasilAnalisis(j).Dpm(m + 1).JumlahHariTelatBiasa + _
+                                    HasilAnalisis(j).Dpm(m + 1).JumlahHariTidakAbsenBiasa + _
+                                    HasilAnalisis(j).Dpm(m + 1).JumlahHariIKM + _
+                                    HasilAnalisis(j).Dpm(m + 1).JumlahHariCepatBiasa
+
+            'piket
+            var_arr(k + m, int_kol_TP_telat_piket) = HasilAnalisis(j).Dpm(m + 1).JumlahHariTelatPiket
+            var_arr(k + m, int_kol_TAP_tidak_absen_piket) = HasilAnalisis(j).Dpm(m + 1).JumlahHariTidakAbsenPiket
+            var_arr(k + m, int_kol_PCP_pulang_cepat_piket) = HasilAnalisis(j).Dpm(m + 1).JumlahHariCepatPiket
+            var_arr(k + m, int_kol_menit_keseluruhan_piket) = HasilAnalisis(j).Dpm(m + 1).JumlahMenitTelatPiket + _
+                                    HasilAnalisis(j).Dpm(m + 1).JumlahMenitCepatPiket
+            var_arr(k + m, int_kol_jumlah_RPP_reward_punishment_piket) = HasilAnalisis(j).Dpm(m + 1).JumlahHariTelatPiket + _
+                                     HasilAnalisis(j).Dpm(m + 1).JumlahHariTidakAbsenPiket + _
+                                    HasilAnalisis(j).Dpm(m + 1).JumlahHariCepatPiket
+            var_arr(k + m, int_kol_total_RP_reward_punishment) = var_arr(k + m, int_kol_jumlah_RP_reward_punishment) + _
+                                    var_arr(k + m, int_kol_jumlah_RPP_reward_punishment_piket)
+            var_arr(k + m, int_kol_total_menit) = var_arr(k + m, int_kol_menit_keseluruhan) + var_arr(k + m, int_kol_menit_keseluruhan_piket)
+        
+        Next m
+        
+        
+        For t = 3 To int_kol_total_menit  'start from Jumlah Hari
+            For s = 0 To Int_JumlahMingguBulanIni - 1
+                var_arr(k + Int_JumlahMingguBulanIni, t) = var_arr(k + Int_JumlahMingguBulanIni, t) _
+                                    + var_arr(k + s, t)
+            Next s
+        Next t
+        TIK_InsentifKinerja(j).HariEfektif = var_arr(k + Int_JumlahMingguBulanIni, 3)
+        
+       k = k + Int_JumlahMingguBulanIni + 1 '6
+       
+       ' Int_Jumlah_Hari = var_arr(k + m, int_kol_masuk)
+    Next j
+    
+
+    
+    ReDim Preserve var_arr(lng_row, lng_col)
+
+    
+    
+    'This is where we adjust the output
+    
+    Set wb = ActiveWorkbook
+    
+        Dim sh As Worksheet
+        
+        
+        
+        On Error Resume Next
+        Set sh = wb.Sheets("Laporan")
+        If Err.Number <> 0 Then
+         Set ws = wb.Sheets.Add(Type:=xlWorksheet, After:=Application.ActiveSheet)
+         ws.Name = "Laporan"
+         Set title1 = ws.Range("A1")
+         
+        Else
+            MsgBox "Sheet 'Laporan' Sudah Ada, jika ingin di compile kembali maka harus di hapus!"
+            Exit Sub
+        End If
+        
+    title1.Resize(lng_row, lng_col).Value = var_arr
+    Application.DisplayAlerts = False
+    ws.Cells.EntireColumn.AutoFit
+    'Group 1
+    BARIS_JUDUL_CELL_1 = BARIS_JUDUL_1 + 1
+    i = BARIS_JUDUL_CELL_1
+    LA_MULAI_KOLOM_JUDUL_UMUM_CELL = LA_MULAI_KOLOM_JUDUL_UMUM + 1
+    j = LA_MULAI_KOLOM_JUDUL_UMUM_CELL
+    
+    'This is to center align all cells,and set font to 8
+    With ws.Range(Cells(1, 1), Cells(lng_row, lng_col))
+        .Font.size = 8
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlBottom
+    End With
+    
+    '
+    With ws.Range(Cells(1, 1), Cells(4, lng_col)) 'TITLE BLOCK
+        With .Interior
+                .Pattern = xlSolid
+                .PatternColorIndex = xlAutomatic
+                .Color = 5296274
+                .TintAndShade = 0
+                .PatternTintAndShade = 0
+        End With
+        .Font.Bold = True
+    End With
+    
+    'set seluruh cell2 laporan (kecuali blok judul)
+    With ws.Range(Cells(1, 1), Cells(4 + ((Int_JumlahMingguBulanIni + 1) * Int_JumlahGukar), lng_col))
+        'Garis batas antar cell di seluruh laporAN
+        .Borders(xlDiagonalDown).LineStyle = xlNone
+        .Borders(xlDiagonalUp).LineStyle = xlNone
+        
+        With .Borders(xlEdgeLeft)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+        
+        With .Borders(xlEdgeTop)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+        
+        With .Borders(xlEdgeBottom)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+        
+        With .Borders(xlEdgeRight)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+        
+        'Ini buat garis vertikal
+        With .Borders(xlInsideVertical)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+        
+        'Ini buat garis horizontal
+        With .Borders(xlInsideHorizontal)
+            .LineStyle = xlContinuous
+            .ColorIndex = 0
+            .TintAndShade = 0
+            .Weight = xlThin
+        End With
+    End With
+    
+    'merging row untuk kolom nomor (kolom 1)
+    With ws.Range(Cells(i, j), Cells(i + 3, j)) '"NO"
+        .Merge
+        .Font.Bold = True
+        .Font.size = 8
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+    End With
+    
+    'merging baris yg berisi nomor index gukar
+    For n = 0 To Int_JumlahGukar - 1
+        p = n * (Int_JumlahMingguBulanIni + 1) + 5 'Angka 5 karena nomor index dimulai di baris 5, angka 6 karena setiap gukar memakai 6 baris. Angka 6 mungkin bisa diganti dg perhitungan jumlah minggu pada periode ini
+        'merging baris nomor gukar
+        With ws.Range(Cells(p, int_kol_nomor + 1), Cells(p + Int_JumlahMingguBulanIni - 1, int_kol_nomor + 1)) '"nomor index"
+            .Merge
+            .HorizontalAlignment = xlCenter
+            .VerticalAlignment = xlCenter
+        End With
+        'merging baris kolom "total"
+        With ws.Range(Cells(p + Int_JumlahMingguBulanIni, j), Cells(p + Int_JumlahMingguBulanIni, j + 1)) '"total"
+            .Merge
+            .HorizontalAlignment = xlCenter
+            .VerticalAlignment = xlCenter
+        End With
+    Next n
+    
+    'merging baris yg berisi kolom judul nama gukar, lokasinya setelah kolom nomor index
+    j = j + 1
+    With ws.Range(Cells(i, int_kol_nama + 1), Cells(i + 3, int_kol_nama + 1)) 'box title "NAMA GURU/KARYAWAN"
+        .Merge
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+    End With
+    
+    For n = 0 To Int_JumlahGukar - 1
+        p = n * (Int_JumlahMingguBulanIni + 1) + 5
+        With ws.Range(Cells(p, int_kol_nama + 1), Cells(p + Int_JumlahMingguBulanIni - 1, int_kol_nama + 1)) '"nama tiap2 guru"
+            .Merge
+            .HorizontalAlignment = xlCenter
+            .VerticalAlignment = xlCenter
+        End With
+    Next n
+    
+    
+    'Group 2
+    'Kolom mulainya tambah 2 dari group 1
+    i = BARIS_JUDUL_CELL_1
+    j = j + 3
+    With ws.Range(Cells(i, int_kol_S_sakit + 1), Cells(i, int_kol_S_sakit + 7)) '"ABSEN"
+        .Merge
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+    End With
+    
+    'Merge baris 2 and 3 untuk kolom S/I/TKA/etc
+    i = BARIS_JUDUL_CELL_1 + 1
+    j = j + 3
+    For k = 0 To 7
+        With ws.Range(Cells(i, int_kol_S_sakit + 1 + k), Cells(i + 1, int_kol_S_sakit + 1 + k)) '"S", "I", etc
+            .Merge
+            .Font.Bold = True
+            .HorizontalAlignment = xlCenter
+            .VerticalAlignment = xlCenter
+            '.Font.Bold
+        End With
+    Next k
+    
+    'Group 3
+    'Merge dua kolom untuk kolom jumlah hari
+    i = BARIS_JUDUL_CELL_1
+    j = j + 8 'Ada 8 kolom sebelum jumlah hari: kolom S, I, etc
+    With ws.Range(Cells(i, int_kol_jumlah_hari_absen + 1), Cells(i, int_kol_jumlah_hari_absen + 2)) '"Jumlah Hari"
+        .Merge
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+    End With
+
+    'Fill color of jumlah hari column
+    With ws.Range(Cells(5, int_kol_jumlah_hari_absen + 1), _
+                    Cells(5 + ((Int_JumlahMingguBulanIni + 1) * Int_JumlahGukar) - 1, int_kol_jumlah_hari_absen + 2)).Interior
+            .Pattern = xlSolid
+            .PatternColorIndex = xlAutomatic
+            .ThemeColor = xlThemeColorAccent3
+            .TintAndShade = 0.799981688894314
+            .PatternTintAndShade = 0
+    End With
+
+    'Group 4
+    'Merge kolom2 untuk kolom judul "REWARD PUNISHMENT BIASA"
+    i = BARIS_JUDUL_CELL_1
+    j = j + 2
+    'With ws.Range(Cells(i, j), Cells(i, j + 7)) '"REWARD PUNISHMENT BIASA"
+    With ws.Range(Cells(1, int_kol_DT_datang_telat + 1), Cells(1, int_kol_DT_datang_telat + 8)) '"REWARD PUNISHMENT BIASA"
+        .Merge
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+    End With
+    
+    'Fill color of jumlah hari column
+    'Buat warna untuk kolom  data JUMLAH HARI, dimulai dari baris ke 5 sampai selesai
+    With ws.Range(Cells(5, int_kol_jumlah_hari_absen + 1), Cells(5 + ((Int_JumlahMingguBulanIni + 1) * Int_JumlahGukar) - 1, _
+                                            int_kol_jumlah_hari_absen + 2)).Interior '"JUMLAH HARI"
+            .Pattern = xlSolid
+            .PatternColorIndex = xlAutomatic
+            .ThemeColor = xlThemeColorAccent3
+            .TintAndShade = 0.799981688894314
+            .PatternTintAndShade = 0
+    End With
+
+    'Merge kolom2 DT/TA/IKM/PC, Menit IKM, Menit DT,PC, dan Menit Keseluruhan
+    i = BARIS_JUDUL_CELL_1 + 1
+    For k = 0 To 6
+        Cells(i, int_kol_DT_datang_telat + 1 + k) = Cells(i, int_kol_DT_datang_telat + 1 + k) + " " + _
+                Cells(i + 1, int_kol_DT_datang_telat + 1 + k)
+        With ws.Range(Cells(i, int_kol_DT_datang_telat + 1 + k), Cells(i + 1, int_kol_DT_datang_telat + 1 + k)) '"DT" "TA" "IKM" "PC" etc
+            .Merge
+            .Font.Bold = True
+            .WrapText = True
+            .HorizontalAlignment = xlCenter
+            .VerticalAlignment = xlCenter
+        End With
+    Next
+    
+    'Group 5
+    'Merging kolom2 judul "REWARD PUNISHMENT PIKET"
+    i = BARIS_JUDUL_CELL_1
+    j = j + 8
+    With ws.Range(Cells(i, int_kol_TP_telat_piket + 1), Cells(i, int_kol_TP_telat_piket + 5)) '"REWARD PUNISHMENT PIKET"
+        .Merge
+        .Font.Bold = True
+       .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+    End With
+    
+    'Fill color tiga columns terakhir
+     With ws.Range(Cells(5, int_kol_jumlah_RPP_reward_punishment_piket + 1), _
+            Cells(5 + ((Int_JumlahMingguBulanIni + 1) * Int_JumlahGukar) - 1, int_kol_jumlah_RPP_reward_punishment_piket + 3)).Interior
+            .Pattern = xlSolid
+            .PatternColorIndex = xlAutomatic
+            .ThemeColor = xlThemeColorAccent3
+            .TintAndShade = 0.799981688894314
+            .PatternTintAndShade = 0
+    End With
+
+    'Merging baris untuk kolom "TP" "TAP" "PCP" dan "MENIT KESELURUHAN" pada RP piket
+    i = BARIS_JUDUL_CELL_1 + 1
+    For k = 0 To 3
+    Cells(i, int_kol_TP_telat_piket + 1 + k) = Cells(i, int_kol_TP_telat_piket + 1 + k) + " " + _
+        Cells(i + 1, int_kol_TP_telat_piket + 1 + k)
+    With ws.Range(Cells(i, int_kol_TP_telat_piket + 1 + k), Cells(i + 1, int_kol_TP_telat_piket + 1 + k)) '"TP" "TAP" "PCP"
+        .Merge
+        .Font.Bold = True
+        .WrapText = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+    End With
+    Next
+    
+    'Group 6
+    'Merging baris untuk kolom2 "TOTAL R/P", "TOTAL MENIT"
+    i = BARIS_JUDUL_CELL_1
+    j = j + 5
+    'Cells(i, int_kol_total_RP_reward_punishment + 1) = Cells(i, int_kol_total_RP_reward_punishment + 1) + " " + _
+    '        Cells(i + 1, int_kol_total_RP_reward_punishment + 1)
+    For k = 0 To 1
+    With ws.Range(Cells(i, int_kol_total_RP_reward_punishment + 1 + k), Cells(i + 1, int_kol_total_RP_reward_punishment + 1 + k)) '"TOTAL R/P", "TOTAL MENIT"
+        .Merge
+        .Font.Bold = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+    End With
+    Next k
+    
+
+    'Kolom2 yg berisi data primer (e.q S I C T PLTH) harus berukuran kecil
+    With Range("D1:K1, N1:S1, V1:X1").EntireColumn
+        .Columns.ColumnWidth = 5
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlBottom
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+        .Font.size = 8
+    End With
+    
+    'Group 2
+    'Kolom mulainya tambah 2 dari group 1
+    i = BARIS_JUDUL_CELL_1
+    j = j + 3
+    'Merging kolom judul "ABSEN" yg agak berubah setelah code diatas yg mengubah ukuran2 cell
+    With ws.Range(Cells(1, int_kol_S_sakit + 1), Cells(1, int_kol_S_sakit + 7)) '"ABSEN"
+        .Merge
+    End With
+    
+    'Merging kolom judul "REWARD PUNISHMENT BIASA" yg agak berubah setelah code diatas yg mengubah ukuran2 cell
+    With ws.Range(Cells(1, int_kol_DT_datang_telat + 1), Cells(1, int_kol_DT_datang_telat + 8)) '"REWARD PUNISHMENT BIASA"
+        .Merge
+    End With
+
+    'Merging kolom judul "REWARD PUNISHMENT PIKET" yg agak berubah setelah code diatas yg mengubah ukuran2 cell
+    With ws.Range(Cells(1, int_kol_TP_telat_piket + 1), Cells(1, int_kol_TP_telat_piket + 5)) '"REWARD PUNISHMENT PIKET"
+        .Merge
+    End With
+    
+    'Code berikut ini untuk membuat kolom menit ikm, menit dt,pc dan kolom menit keseluruhan cantik lagi
+    'setelah dihancurkan oleh kode diatas yg mengatur lebar cell2 untuk data primer
+    'TODO: jumlah menit keseluruhan untuk piket bermasalah ketika dibuat seperti ini. Somehow, dia mempengaruhi
+    'kolom2 yang lain????
+    For k = 0 To 2
+        With ws.Range(Cells(2, int_kol_menit_ikm + 1 + k), Cells(3, int_kol_menit_ikm + 1 + k))  '"DT" "TA" "IKM" "PC" etc
+        '.Merge
+        .Font.Bold = True
+        .WrapText = True
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = True
+
+        End With
+    Next k
+    
+    'Mengisi baris total untuk seluruh karyawan dengan fill warna kekuningan
+    For n = 1 To Int_JumlahGukar
+        p = (n * (Int_JumlahMingguBulanIni + 1)) + 4
+        With ws.Range(Cells(p, 1), Cells(p, lng_col)).Interior
+            .Pattern = xlSolid
+            .PatternColorIndex = xlAutomatic
+            .ThemeColor = xlThemeColorAccent3
+            .TintAndShade = -0.1 '-0.499984740745262 '0.799981688894314
+            .PatternTintAndShade = 0
+        End With
+        With ws.Range(Cells(p, 1), Cells(p, lng_col))
+            .Font.Bold = True
+        End With
+    Next n
+    ws.Cells.EntireColumn.AutoFit
+
+Application.DisplayAlerts = True
+
+End Sub 'Buat_Laporan_Akhir
+
+
+Sub Buat_Worksheet_IKM()
+    Dim var_arr As Variant
+    Dim header_arr As Variant
+    Dim RowCount As Integer
+    Dim int_bulan As Integer
+    
+    Dim table As ListObject
+    Dim tblRows As ListRows
+    Dim tblRow As ListRow
+    Dim size As Integer
+    Dim Count As Integer
+    Dim int_bulanLalu As Integer
+    Dim int_tahunLalu As Integer
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim title1 As Range
+    Dim bulan As String
+    Dim tahun As Integer
+
+    bulan = InputBox("Nama Bulan Presensi?", "Nama Bulan")
+    If bulan = "" Then
+        MsgBox "Belum mengisi Bulan"
+        Exit Sub
+    End If
+    
+
+    bulan = LCase(bulan)
+   
+   
+    tahun = InputBox("Di isi sesuai tahun sekarang(Sesuai tahun di RecordAbsen)?", "tahun")
+    
+    If Not tahun = year(Now()) Then
+        MsgBox "Inputan Harus Sesuai Tahun sekarang"
+        Exit Sub
+    End If
+    
+   
+    int_bulan = Konvert_Bulan_Ke_Bilangan(bulan)
+    'untuk bulan januari, bulan dan tahun sebelumnya harus dihitung khusus
+    If int_bulan = 1 Then
+        int_bulanLalu = 12
+        int_tahunLalu = tahun - 1
+    Else
+        int_bulanLalu = int_bulan - 1
+        int_tahunLalu = tahun
+    End If
+    
+    
+    
+    'find unit
+    Str_Unit = UCase(Worksheets("Jadwal").Range("T_Unit[Unit]").Cells(1, 1))
+    
+    If (Str_Unit = "PONDOK") Then
+        'Pondok memakai periode penggajian mengikuti bulan
+        Int_JumlahHariPeriodeIni = Init_Tanggal_Akhir(int_bulan, tahun)
+        Call Init_Hari_Untuk_Tanggal_Periode_Ini_Pondok(int_bulan, tahun)
+    Else
+        'Unit2 lain memakai tanggal penggajian mulai tanggal 26 bulan lalu
+        Int_HariBulanLalu = Init_Tanggal_Akhir(int_bulanLalu, int_tahunLalu)
+        Int_JumlahHariPeriodeIni = (Int_HariBulanLalu - 26 + 1) + 25
+        Call Init_Hari_Untuk_Tanggal_Periode_Ini(int_bulan, tahun)
+    End If
+
+    'isi hari cuti setiap pegawai
+    Set table = Worksheets("Personal").ListObjects("T_Personal")
+    'Get all the Rows of a table
+    Set tblRows = table.ListRows
+    size = tblRows.Count
+
+    ReDim var_arr(size, Int_JumlahHariPeriodeIni + 4)
+    ReDim header_arr(1, Int_JumlahHariPeriodeIni + 4)
+
+    header_arr(0, 0) = "Nomor"
+    header_arr(0, 1) = "id"
+    header_arr(0, 2) = "Nama"
+    header_arr(0, 3) = "NRY"
+    
+    Count = 0
+    For Each tblRow In tblRows
+        'Display the value in each row for column 1
+        'The row index will always start at 1, irrespective of its
+        'position on the worksheet
+        var_arr(Count, 0) = Count + 1
+        var_arr(Count, 1) = table.DataBodyRange(tblRow.index, 2) 'gukar ID
+        var_arr(Count, 2) = table.DataBodyRange(tblRow.index, 3) 'nama
+        var_arr(Count, 3) = table.DataBodyRange(tblRow.index, 4) 'nry
+        Count = Count + 1
+    Next
+    
+    'fill out header_arr with date from global variable Adat_TanggalPeriodeIni
+            For Count = 1 To Int_JumlahHariPeriodeIni
+        header_arr(0, Count + 3) = CStr(Format(Adat_TanggalPeriodeIni(Count), "dd/mm/yyyy"))
+    Next Count
+    
+    Set wb = ActiveWorkbook
+    
+    Application.DisplayAlerts = False
+    
+    Set ws = wb.Sheets.Add(Type:=xlWorksheet, After:=Application.ActiveSheet)
+    ws.Name = "IKM"
+    
+    'copy the header
+    'excel requires to make sure that the cell number format is text ('@')
+    For Count = 0 To Int_JumlahHariPeriodeIni + 4
+        Range("A1").Offset(0, Count).NumberFormat = "@"
+        Range("A1").Offset(0, Count).Value = header_arr(0, Count) '"'" & CStr(var_arr(0, Count))
+    Next Count
+    
+    'copy data from line number 2 onward
+        
+    Set title1 = ws.Range("A2").Resize(size + 1, Int_JumlahHariPeriodeIni + 4)
+    title1 = var_arr
+    
+    Set title1 = ws.Range("A1").Resize(size + 1, Int_JumlahHariPeriodeIni + 4)
+    Application.DisplayAlerts = False
+
+    
+    'create a table
+    Dim tableName As String
+    Dim tableRange As Range
+    tableName = "T_IKM"
+    ws.ListObjects.Add(SourceType:=xlSrcRange, _
+        Source:=title1.Resize(size + 1, Int_JumlahHariPeriodeIni + 4), _
+        xlListObjectHasHeaders:=xlYes _
+        ).Name = tableName
+    
+    ws.Cells.EntireColumn.AutoFit
+
+    
+End Sub 'Buat_Worksheet_IKM
+
+Function Convert_Date(str_date As String) As Date
+
+    Dim mth     As Integer
+    Dim dy      As Integer
+    Dim yr      As Integer
+    Dim astr_str_date()      As String
+
+    astr_str_date = Split(str_date, "/")
+
+    mth = astr_str_date(0)
+    dy = astr_str_date(1)
+    yr = astr_str_date(2)
+    Convert_Date = Format(DateSerial(yr, mth, dy), "dd mm yyyy")
+
+End Function 'Convert_Date
+Sub Create_Hasil_Worksheet()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim title As Range
+    Dim title1 As Range
+    Dim i As Integer
+    Dim j As Integer
+    Dim k As Integer
+    Dim l As Integer
+    Dim m As Integer
+    Dim n As Integer
+    Dim Tanggal As Date
+    Dim str_tanggal As String
+
+    Dim var_arr As Variant
+    Dim lng_row As Long
+    lng_row = Int_JumlahGukar + 10
+    Dim lng_col As Long
+    lng_col = Int_JumlahHariPeriodeIni * 6 + 23
+
+    ReDim var_arr(lng_row + 1, lng_col + 1)
+
+    Application.ScreenUpdating = False
+
+    i = MULAI_KOLOM_JUDUL_UMUM
+    var_arr(BARIS_JUDUL_1, i) = "Nomor"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Id"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Nama"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "NRY"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Piket"
+    i = i + 1
+
+    For j = 1 To Int_JumlahHariPeriodeIni
+        str_tanggal = Adat_TanggalPeriodeIni(j)
+        var_arr(BARIS_JUDUL_1, i + 1) = DateValue(str_tanggal) 'Format(lng_tanggal, "Short Date")
+        var_arr(BARIS_JUDUL_1, i + 3) = Konvert_Hari_Ke_String(Weekday(var_arr(0, i + 1)))
+        i = i + 6
+    Next j
+    i = 1
+    'MULAI_KOLOM_HARI_JAM = 6
+    For j = 0 To (Int_JumlahHariPeriodeIni - 1)
+        k = 6 * j 'dikali 6 karena ada 6 kolom untuk data jam/scan masuk keluar per hari
+        k = k + MULAI_KOLOM_HARI_JAM  'k will repeat 6, 12, 18, etc...
+        var_arr(BARIS_JUDUL_2, k) = "Jm Msk"
+        k = k + 1
+        var_arr(BARIS_JUDUL_2, k) = "Sbr"
+        k = k + 1
+        var_arr(BARIS_JUDUL_2, k) = "Sc Msk"
+        k = k + 1
+        var_arr(BARIS_JUDUL_2, k) = "Jm Klr"
+        k = k + 1
+        var_arr(BARIS_JUDUL_2, k) = "Sbr"
+        k = k + 1
+        var_arr(BARIS_JUDUL_2, k) = "Sc Klr"
+        k = k + 1
+    Next j
+
+    'SELANG_ANTARA_KOLOM_HARI_MENIT
+    k = k + SELANG_ANTARA_KOLOM_HARI_MENIT ' ada selang satu kolom kosing antara kolom hari dan menit
+    var_arr(BARIS_JUDUL_1, k) = "Menit"
+    var_arr(BARIS_JUDUL_2, k) = "Telat Biasa"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Telat Piket"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Total Telat"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Cepat Biasa"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Cepat Piket"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Lupa Biasa"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Lupa Piket"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "IKM"
+    k = k + 1
+
+    'SELANG_ANTARA_KOLOM_MENIT_HARI_TIDAK_MASUK
+    k = k + SELANG_ANTARA_KOLOM_MENIT_HARI_TIDAK_MASUK 'ada selang dua kolom kosong antara kolom menit dan hari tidak masuk
+    var_arr(BARIS_JUDUL_1, k) = "Hari"
+    var_arr(BARIS_JUDUL_2, k) = "Aktif"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Cuti"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Izin"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Sakit"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "DLNT"
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "PLTH"
+    k = k + 1
+    'var_arr(BARIS_JUDUL_2, k) = "Pengajian"
+    'k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Total"
+    'error subcript ofrange
+    k = k + 1
+    var_arr(BARIS_JUDUL_2, k) = "Alpa"
+
+
+    For i = 1 To Int_JumlahGukar
+        'MULAI_KOLOM_JUDUL_UMUM = 0
+        j = MULAI_KOLOM_JUDUL_UMUM
+        var_arr(i + BARIS_JUDUL_2, j) = i
+        j = j + 1
+        var_arr(i + BARIS_JUDUL_2, j) = HasilAnalisis(i).id
+        j = j + 1
+        var_arr(i + BARIS_JUDUL_2, j) = HasilAnalisis(i).Nama
+        j = j + 1
+        var_arr(i + BARIS_JUDUL_2, j) = HasilAnalisis(i).NRY
+        j = j + 1
+        var_arr(i + BARIS_JUDUL_2, j) = Konvert_Hari_Ke_String(HasilAnalisis(i).HariPiket.hari(1)) + " " + _
+                                            Konvert_Hari_Ke_String(HasilAnalisis(i).HariPiket.hari(2)) 'Konvert_Hari_Ke_String(HasilAnalisis(i).HariPiket)
+    Next i
+
+    For i = 1 To Int_JumlahGukar
+        l = i + 1
+        For j = 0 To (Int_JumlahHariPeriodeIni - 1)
+            k = 6 * j 'dikali 6 karena ada 6 kolom untuk data jam/scan masuk keluar per hari
+            k = k + MULAI_KOLOM_HARI_JAM
+            var_arr(l, k) = Format(HasilAnalisis(i).JamMasuk(j + 1), "Short Time") '"Jam Masuk"
+            k = k + 1
+            var_arr(l, k) = HasilAnalisis(i).AlasanMasuk(j + 1)
+            k = k + 1
+            var_arr(l, k) = Format(HasilAnalisis(i).ScanMasuk(j + 1), "Short Time") '"Scan Masuk"
+            k = k + 1
+            var_arr(l, k) = Format(HasilAnalisis(i).JamKeluar(j + 1), "Short Time") '"Jam Keluar"
+            k = k + 1
+            var_arr(l, k) = HasilAnalisis(i).AlasanKeluar(j + 1) '"Sumber"
+            k = k + 1
+            var_arr(l, k) = Format(HasilAnalisis(i).ScanKeluar(j + 1), "Short Time") '"Scan Masuk"
+        Next j
+
+        k = k + 1 + SELANG_ANTARA_KOLOM_HARI_MENIT
+        var_arr(l, k) = HasilAnalisis(i).Dpb.JumlahMenitTelatBiasa
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.JumlahMenitTelatPiket
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.JumlahMenitTelatPiket + HasilAnalisis(i).Dpb.JumlahMenitTelatBiasa
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.JumlahMenitCepatBiasa
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.JumlahMenitCepatPiket
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.JumlahHariTidakAbsenBiasa
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.JumlahHariTidakAbsenPiket
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.JumlahMenitIKM
+        k = k + 1
+
+        k = k + SELANG_ANTARA_KOLOM_MENIT_HARI_TIDAK_MASUK
+        var_arr(l, k) = HasilAnalisis(i).Dpb.HariAnggapMasukValid.Aktif
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.HariTidakMasukValid.Cuti
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.HariTidakMasukValid.Izin
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.HariTidakMasukValid.Sakit
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.HariTidakMasukValid.DLNT
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.HariAnggapMasukValid.PLTH
+        k = k + 1
+        'var_arr(l, k) = HasilAnalisis(i).Dpb.HariAnggapMasukValid.Pengajian
+        'k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.HariTidakMasukValid.Total
+        k = k + 1
+        var_arr(l, k) = HasilAnalisis(i).Dpb.HariAlpa.Total
+
+   Next i
+
+
+    lng_col = k
+
+
+    m = i
+    n = k
+    Set wb = ActiveWorkbook
+        
+        Dim sh As Worksheet
+        
+        
+        
+        On Error Resume Next
+        Set sh = wb.Sheets("Data")
+        If Err.Number <> 0 Then
+             Set ws = wb.Sheets.Add(Type:=xlWorksheet, After:=Application.ActiveSheet)
+             ws.Name = "Data"
+        Else
+            MsgBox "Sheet 'Data' Sudah Ada, jika ingin di compile kembali maka harus di hapus!"
+            Exit Sub
+        End If
+        
+        Set title1 = ws.Range("A1")
+        title1.Resize(i + 1, k + 1).Value = var_arr
+        Application.DisplayAlerts = False
+        ws.Cells.EntireColumn.AutoFit
+       
+               
+    Dim r1 As Range
+    Set r1 = ws.Cells(1, 1).EntireRow
+
+    For i = 0 To Int_JumlahHariPeriodeIni - 1
+        j = (i * 6) + 7
+        r1.Cells(1, j).Value = r1.Cells(1, j).Value & " " & r1.Cells(1, j + 2).Value
+        With ws.Range(Cells(1, j), Cells(1, j + 5))
+            .Merge
+            .HorizontalAlignment = xlCenter
+            .VerticalAlignment = xlCenter
+        End With
+    Next i
+
+    r1.Cells(1, j).Value = r1.Cells(1, j).Value & " " & r1.Cells(1, j + 2).Value
+    With ws.Range(Cells(1, j + 7), Cells(1, j + 14))
+        .Merge
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .Interior.Color = &HFF9900
+    End With
+
+    'hari tidak masuk
+    With ws.Range(Cells(1, j + 16), Cells(1, j + 23))
+        .Merge
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .Interior.Color = &H339966
+    End With
+    r1.Cells(1, j + 16).Value = "Hari Tidak Masuk"
+
+    ActiveWindow.FreezePanes = False
+    Range("E3").Select
+    ActiveWindow.FreezePanes = True
+Application.DisplayAlerts = True
+
+End Sub 'Create_Hasil_Worksheet
+
+Function Get_Gukar_Tindex_Id(gukar_id As Integer) As Integer
+    Dim index As Integer
+    
+    Get_Gukar_Tindex_Id = 0
+    For index = 1 To Int_JumlahGukar
+        If HasilAnalisis(index).id = gukar_id Then
+            Get_Gukar_Tindex_Id = index
+            Exit For
+        End If
+    Next index
+    
+End Function 'Get_Gukar_Tindex_Id
+
+Function Get_Tanggal_Index(Tanggal As Date) As Integer
+    Dim index As Integer
+    
+    Get_Tanggal_Index = 0
+    'index = tanggal berubah
+    For index = 1 To Int_JumlahHariPeriodeIni
+        If Adat_TanggalPeriodeIni(index) = Tanggal Then
+            Get_Tanggal_Index = index
+            Exit For
+        End If
+    Next index
+
+End Function 'Get_Tanggal_Index
+
+Function Get_Valid_Reason(int_guKar As Integer, Tanggal As Date) As String
+    Dim index As Integer
+    Dim bol_found As Boolean
+    
+    Get_Valid_Reason = "-"
+    bol_found = False
+    For index = 1 To THA_HariTidakMasukValid(int_guKar).Total
+        If Tanggal = THA_HariTidakMasukValid(int_guKar).Tanggal(index) Then
+            Get_Valid_Reason = THA_HariTidakMasukValid(int_guKar).Alasan(index)
+            bol_found = True
+            Exit For
+        End If
+    Next index
+
+    
+    If bol_found = False Then
+        For index = 1 To THA_HariAnggapMasukValid(int_guKar).Total
+            If Tanggal = THA_HariAnggapMasukValid(int_guKar).Tanggal(index) Then
+                Get_Valid_Reason = THA_HariAnggapMasukValid(int_guKar).Alasan(index)
+                Exit For
+            End If
+        Next index
+    End If
+
+End Function 'Get_Valid_Reason
+
+Sub Init_Hari_Gukar_NonAktif()
+
+    ReDim THA_HariNonAktif(1 To Int_JumlahGukar)
+    Dim index_gukar As Integer
+    Dim sel As Range
+    Dim rng_idGukar As Range
+    Dim Tanggal As Date
+    Dim int_tgl_tid As Integer
+    Dim i As Integer
+    Dim j As Integer
+    Dim int_minggu As Integer
+    Dim prev_minggu As Integer
+    Dim int_index_per_minggu As Integer
+
+    ReDim int_count_total(1 To Int_JumlahGukar)
+    ReDim int_count_total_2(1 To Int_JumlahGukar)
+    'isi hari cuti setiap pegawai
+    index_gukar = 1
+    Set rng_idGukar = Worksheets("Personal").Range("T_Personal[Masuk]")    'Get all the Rows of a table
+    THA_HariNonAktif(index_gukar).Total = 0
+    For Each sel In rng_idGukar
+        If (sel <> "") Then
+            Tanggal = sel.Value
+            
+            ReDim THA_HariNonAktif(index_gukar).Tanggal(1 To 31)
+            ReDim THA_HariNonAktif(index_gukar).Alasan(1 To 31)
+            THA_HariNonAktif(index_gukar).Total = 0
+                
+            int_tgl_tid = Get_Tanggal_Index(Tanggal)
+            
+            'kebaca satu hari setelah nya
+            For i = 1 To int_tgl_tid - 1
+                THA_HariNonAktif(index_gukar).Tanggal(i) = Adat_TanggalPeriodeIni(i)
+                THA_HariNonAktif(index_gukar).Alasan(i) = "BelumMasuk"
+                THA_HariNonAktif(index_gukar).Total = THA_HariNonAktif(index_gukar).Total + 1
+            Next i
+        End If
+        index_gukar = index_gukar + 1
+    Next
+
+    index_gukar = 1
+    Set rng_idGukar = Worksheets("Personal").Range("T_Personal[Keluar]")    'Get all the Rows of a table
+    For Each sel In rng_idGukar
+        If (sel <> "") Then
+            Tanggal = sel.Value
+            
+            ReDim THA_HariNonAktif(index_gukar).Tanggal(1 To 31)
+            ReDim THA_HariNonAktif(index_gukar).Alasan(1 To 31)
+            THA_HariNonAktif(index_gukar).Total = 0
+                
+            int_tgl_tid = Get_Tanggal_Index(Tanggal)
+            
+            For i = (int_tgl_tid + 1) To Int_JumlahHariPeriodeIni
+                THA_HariNonAktif(index_gukar).Tanggal(i - int_tgl_tid) = Adat_TanggalPeriodeIni(i)
+                THA_HariNonAktif(index_gukar).Alasan(i - int_tgl_tid) = "SudahKeluar"
+                THA_HariNonAktif(index_gukar).Total = THA_HariNonAktif(index_gukar).Total + 1
+            Next i
+        End If
+        index_gukar = index_gukar + 1
+    Next
+    
+    'int_index_per_minggu = 1
+    For i = 1 To Int_JumlahGukar
+        If THA_HariNonAktif(i).Total > 0 Then
+            prev_minggu = 0
+            For j = 1 To THA_HariNonAktif(i).Total
+                Tanggal = THA_HariNonAktif(i).Tanggal(j)
+                int_minggu = Minggu_Ke_Berapa(Tanggal)
+                
+                If int_minggu <> prev_minggu Then
+                    int_index_per_minggu = 1
+                    prev_minggu = int_minggu
+                End If
+                
+                HasilAnalisis(i).Dpm(int_minggu).HariNonAktifPerMinggu.Tanggal(int_index_per_minggu) = _
+                            Tanggal
+                HasilAnalisis(i).Dpm(int_minggu).HariNonAktifPerMinggu.Alasan(int_index_per_minggu) = _
+                            THA_HariNonAktif(i).Alasan(j)
+                HasilAnalisis(i).Dpm(int_minggu).HariNonAktifPerMinggu.Total = _
+                            HasilAnalisis(i).Dpm(int_minggu).HariNonAktifPerMinggu.Total + 1
+                        
+                HasilAnalisis(i).Dpb.HariNonAktif.Tanggal(j) = Tanggal
+                HasilAnalisis(i).Dpb.HariNonAktif.Alasan(j) = THA_HariNonAktif(i).Alasan(j)
+                HasilAnalisis(i).Dpb.HariNonAktif.Total = _
+                    HasilAnalisis(i).Dpb.HariNonAktif.Total + 1
+            Next j
+        End If
+    Next i
+
+End Sub
+
+Sub Init_Hari_Khusus(TableKhusus As ListObject, TTCK_Array() As T_TanggalCountKhusus, TableExists As Boolean)
+    Dim table As ListObject
+    Dim tblRows As ListRows
+    Dim tblRow As ListRow
+    Dim str_TanggalKhusus
+    Dim astr_stri() As String
+    Dim str_i
+    Dim count_tanggal As Integer
+    Dim count_minggu As Integer
+    Dim count_id As Integer
+    Dim size As Integer
+    Dim Count As Integer
+    Dim wkday As Integer
+    
+    Set table = TableKhusus
+    'Get all the Rows of a table
+    Set tblRows = table.ListRows
+    size = tblRows.Count
+
+    If (size > 0) Then
+        TableExists = True
+        Count = 1
+        ReDim TTCK_Array(1 To size)
+        For Each tblRow In tblRows
+            count_tanggal = 1
+            count_minggu = 1
+            TTCK_Array(Count).Sebab = table.DataBodyRange(tblRow.index, 2)
+            TTCK_Array(Count).JamMasuk = table.DataBodyRange(tblRow.index, 3)
+            TTCK_Array(Count).JamKeluar = table.DataBodyRange(tblRow.index, 4)
+    
+            If (table.DataBodyRange(tblRow.index, 7) = "Tanggal") Then
+                str_TanggalKhusus = table.DataBodyRange(tblRow.index, 5)
+                astr_stri = Split(str_TanggalKhusus, ", ")
+                For Each str_i In astr_stri
+                    TTCK_Array(Count).Tanggal(count_tanggal) = CDate(str_i)
+                    count_tanggal = count_tanggal + 1
+                Next str_i
+                TTCK_Array(Count).CountTanggal = count_tanggal - 1
+    
+            ElseIf (table.DataBodyRange(tblRow.index, 7) = "Hari") Then
+                If (table.DataBodyRange(tblRow.index, 5) = 0) Then
+                    For count_tanggal = 1 To Int_JumlahHariPeriodeIni
+                        TTCK_Array(Count).Tanggal(count_tanggal) = Adat_TanggalPeriodeIni(count_tanggal)
+                    Next count_tanggal
+                 TTCK_Array(Count).CountTanggal = count_tanggal - 1
+                Else
+                    wkday = Konvert_Hari_Ke_Bilangan(table.DataBodyRange(tblRow.index, 5))
+                    For count_minggu = 1 To 5
+                        TTCK_Array(Count).Tanggal(count_minggu) = Adat_TanggalPerMingguSatuBulan(count_minggu, wkday)
+                    Next count_minggu
+                TTCK_Array(Count).CountTanggal = count_minggu - 1
+                End If
+            End If
+            
+            count_id = 1
+            str_TanggalKhusus = table.DataBodyRange(tblRow.index, 6)
+            astr_stri = Split(str_TanggalKhusus, ", ")
+            For Each str_i In astr_stri
+                 TTCK_Array(Count).id(count_id) = str_i
+                count_id = count_id + 1
+            Next str_i
+            TTCK_Array(Count).CountId = count_id - 1
+            
+            Count = Count + 1
+        Next tblRow
+    End If
+
+End Sub 'Init_Hari_Khusus
+
+Sub Init_Hari_Khusus_Prioritas()
+    
+    Dim table As ListObject
+    
+    Set table = Worksheets("Jadwal").ListObjects("T_Khusus_Prioritas")
+    
+    Call Init_Hari_Khusus(table, TTCK_TanggalCountKhususPrioritas, Bol_TanggalKhusus_Prioritas)
+    
+
+End Sub
+
+Sub Init_Hari_Khusus_Normal()
+    
+    Dim table As ListObject
+    
+    Set table = Worksheets("Jadwal").ListObjects("T_Khusus")
+    
+    Call Init_Hari_Khusus(table, TTCK_TanggalCountKhusus, Bol_TanggalKhusus)
+
+End Sub
+
+
+
+
+Sub Init_Hari_Tidak_Masuk_Valid()
+    
+    ReDim THA_HariTidakMasukValid(1 To Int_JumlahGukar)
+    ReDim THA_HariAnggapMasukValid(1 To Int_JumlahGukar)
+    Dim index_gukar As Integer
+    Dim str_alp As String
+    Dim astr_str_alpa
+    Dim sel As Range
+  
+    Dim str_i As Variant
+    Dim rng_idGukar As Range
+    Dim int_count_total() As Integer
+    Dim int_count_total_2() As Integer
+
+
+    ReDim int_count_total(1 To Int_JumlahGukar)
+    ReDim int_count_total_2(1 To Int_JumlahGukar)
+    'isi hari cuti setiap pegawai
+    index_gukar = 1
+    Set rng_idGukar = Worksheets("Personal").Range("T_Personal[Cuti]")    'Get all the Rows of a table
+    THA_HariTidakMasukValid(index_gukar).Total = 0
+    THA_HariAnggapMasukValid(index_gukar).Total = 0
+    For Each sel In rng_idGukar
+        ReDim THA_HariTidakMasukValid(index_gukar).Tanggal(1 To 31)
+        ReDim THA_HariTidakMasukValid(index_gukar).Alasan(1 To 31)
+        ReDim THA_HariAnggapMasukValid(index_gukar).Tanggal(1 To 31)
+        ReDim THA_HariAnggapMasukValid(index_gukar).Alasan(1 To 31)
+        If (sel <> "") Then
+            str_alp = sel
+            astr_str_alpa = Split(str_alp, ", ")
+            For Each str_i In astr_str_alpa
+                THA_HariTidakMasukValid(index_gukar).Tanggal(int_count_total(index_gukar) + 1) = CDate(str_i)
+                THA_HariTidakMasukValid(index_gukar).Alasan(int_count_total(index_gukar) + 1) = "Cuti"
+                int_count_total(index_gukar) = int_count_total(index_gukar) + 1
+            Next str_i
+        End If
+        
+        selCuti = Split(str_alp, ", ")
+        a = UBound(selCuti)
+
+        
+        index_gukar = index_gukar + 1
+
+    Next
+            
+
+
+        
+    
+            
+    Set rng_idGukar = Worksheets("Personal").Range("T_Personal[Sakit]")    'Get all the Rows of a table
+    index_gukar = 1
+    For Each sel In rng_idGukar
+        If (sel <> "") Then
+            str_alp = sel
+            astr_str_alpa = Split(str_alp, ", ")
+            For Each str_i In astr_str_alpa
+                THA_HariTidakMasukValid(index_gukar).Tanggal(int_count_total(index_gukar) + 1) = CDate(str_i)
+                THA_HariTidakMasukValid(index_gukar).Alasan(int_count_total(index_gukar) + 1) = "Sakit"
+                int_count_total(index_gukar) = int_count_total(index_gukar) + 1
+            Next str_i
+        End If
+        index_gukar = index_gukar + 1
+    Next
+            
+    Set rng_idGukar = Worksheets("Personal").Range("T_Personal[Izin]")    'Get all the Rows of a table
+    index_gukar = 1
+    For Each sel In rng_idGukar
+        If (sel <> "") Then
+            str_alp = sel
+            astr_str_alpa = Split(str_alp, ", ")
+            For Each str_i In astr_str_alpa
+                THA_HariTidakMasukValid(index_gukar).Tanggal(int_count_total(index_gukar) + 1) = CDate(str_i)
+                THA_HariTidakMasukValid(index_gukar).Alasan(int_count_total(index_gukar) + 1) = "Izin"
+                int_count_total(index_gukar) = int_count_total(index_gukar) + 1
+            Next str_i
+        End If
+        index_gukar = index_gukar + 1
+    Next
+            
+    Set rng_idGukar = Worksheets("Personal").Range("T_Personal[DLNT]")    'Get all the Rows of a table
+    index_gukar = 1
+    For Each sel In rng_idGukar
+        If (sel <> "") Then
+            str_alp = sel
+            astr_str_alpa = Split(str_alp, ", ")
+            For Each str_i In astr_str_alpa
+                THA_HariTidakMasukValid(index_gukar).Tanggal(int_count_total(index_gukar) + 1) = CDate(str_i)
+                THA_HariTidakMasukValid(index_gukar).Alasan(int_count_total(index_gukar) + 1) = "DLNT"
+                int_count_total(index_gukar) = int_count_total(index_gukar) + 1
+            Next str_i
+        End If
+        THA_HariTidakMasukValid(index_gukar).Total = int_count_total(index_gukar)
+        
+        index_gukar = index_gukar + 1
+    Next
+    
+    Set rng_idGukar = Worksheets("Personal").Range("T_Personal[DLTR]")    'Get all the Rows of a table
+    index_gukar = 1
+    For Each sel In rng_idGukar
+        If (sel <> "") Then
+            str_alp = sel
+            astr_str_alpa = Split(str_alp, ", ")
+            For Each str_i In astr_str_alpa
+                THA_HariAnggapMasukValid(index_gukar).Tanggal(int_count_total_2(index_gukar) + 1) = CDate(str_i)
+                THA_HariAnggapMasukValid(index_gukar).Alasan(int_count_total_2(index_gukar) + 1) = "DLTR"
+                int_count_total_2(index_gukar) = int_count_total_2(index_gukar) + 1
+            Next str_i
+        End If
+        index_gukar = index_gukar + 1
+    Next
+    
+    Set rng_idGukar = Worksheets("Personal").Range("T_Personal[PLTH]")    'Get all the Rows of a table
+    index_gukar = 1
+    For Each sel In rng_idGukar
+        If (sel <> "") Then
+            str_alp = sel
+            astr_str_alpa = Split(str_alp, ", ")
+            For Each str_i In astr_str_alpa
+                THA_HariAnggapMasukValid(index_gukar).Tanggal(int_count_total_2(index_gukar) + 1) = CDate(str_i)
+                THA_HariAnggapMasukValid(index_gukar).Alasan(int_count_total_2(index_gukar) + 1) = "PLTH"
+                int_count_total_2(index_gukar) = int_count_total_2(index_gukar) + 1
+            Next str_i
+        End If
+        index_gukar = index_gukar + 1
+    Next
+    
+    'Pengajian
+    'Set rng_idGukar = Worksheets("Personal").Range("T_Personal[Pengajian]")    'Get all the Rows of a table
+    'index_gukar = 1
+    'For Each sel In rng_idGukar
+        'If (sel <> "") Then
+            'str_alp = sel
+            'astr_str_alpa = Split(str_alp, ", ")
+            'For Each str_i In astr_str_alpa
+                'THA_HariAnggapMasukValid(index_gukar).Tanggal(int_count_total_2(index_gukar) + 1) = CDate(str_i)
+                'THA_HariAnggapMasukValid(index_gukar).Alasan(int_count_total_2(index_gukar) + 1) = "Pengajian"
+                'int_count_total_2(index_gukar) = int_count_total_2(index_gukar) + 1
+           ' Next str_i
+        'End If
+        'index_gukar = index_gukar + 1
+    'Next
+    
+    Set rng_idGukar = Worksheets("Personal").Range("T_Personal[Aktif]")    'Get all the Rows of a table
+    index_gukar = 1
+    For Each sel In rng_idGukar
+        If (sel <> "") Then
+            str_alp = sel
+            astr_str_alpa = Split(str_alp, ", ")
+            For Each str_i In astr_str_alpa
+                THA_HariAnggapMasukValid(index_gukar).Tanggal(int_count_total_2(index_gukar) + 1) = CDate(str_i)
+                THA_HariAnggapMasukValid(index_gukar).Alasan(int_count_total_2(index_gukar) + 1) = "Aktif"
+                int_count_total_2(index_gukar) = int_count_total_2(index_gukar) + 1
+            Next str_i
+        End If
+        THA_HariAnggapMasukValid(index_gukar).Total = int_count_total_2(index_gukar)
+
+        index_gukar = index_gukar + 1
+    Next
+            
+End Sub 'Init_Hari_Tidak_Masuk_Valid
+
+Sub Init_Hari_Umum()
+    Dim table As ListObject
+    Dim tblRows As ListRows
+    Dim tblRow As ListRow
+    Dim str_TanggalUmum
+    Dim astr_stri() As String
+    Dim str_i
+    Dim Count As Integer
+    Dim count_1 As Integer
+    Dim size As Integer
+    
+    Set table = Worksheets("Jadwal").ListObjects("T_Umum")
+    'Get all the Rows of a table
+    Set tblRows = table.ListRows
+    size = tblRows.Count
+    
+    If (size > 0) Then
+    
+        Bol_TanggalUmum = True
+        ReDim TTCU_TanggalCountUmum(1 To size)
+    
+        Count = 1
+        count_1 = 1
+    
+        'cek bila ada hari kegiatan umum
+        For Each tblRow In tblRows
+            'Display the value in each row for column 1
+            'The row index will always start at 1, irrespective of its
+            'position on the worksheet
+            count_1 = 1
+            TTCU_TanggalCountUmum(Count).Sebab = table.DataBodyRange(tblRow.index, 2)
+            TTCU_TanggalCountUmum(Count).JamMasuk = table.DataBodyRange(tblRow.index, 3)
+            TTCU_TanggalCountUmum(Count).JamKeluar = table.DataBodyRange(tblRow.index, 4)
+            str_TanggalUmum = table.DataBodyRange(tblRow.index, 5)
+            astr_stri = Split(str_TanggalUmum, ", ")
+            For Each str_i In astr_stri
+                TTCU_TanggalCountUmum(Count).Tanggal(count_1) = CDate(str_i)
+                count_1 = count_1 + 1
+            Next str_i
+            TTCU_TanggalCountUmum(Count).CountTanggal = count_1 - 1
+            Count = Count + 1
+        Next tblRow
+        
+        ReDim Preserve TTCU_TanggalCountUmum(1 To (Count - 1))
+    End If
+    
+End Sub 'Init_Hari_Umum
+
+'Procedure ini mengisi date array yg berisi tanggal periode ini, Adat_TanggalPeriodeIni.
+'Procedure ini juga mengisi array dua dimensi,  Adat_TanggalPerMingguSatuBulan. Baris ini menunjukkan minggu ke berapa,
+'    dan kolom menunjukkan hari dalam minggu itu.
+Sub Init_Hari_Untuk_Tanggal_Periode_Ini(bulan As Integer, tahun As Integer)
+    Dim int_bulanLalu As Integer
+    Dim int_tahunLalu As Integer
+    Dim count_hari As Integer
+    Dim count_minggu As Integer
+    Dim hari As Integer
+    Dim Tanggal As Date
+    Dim wkday As Integer
+    
+    
+    'untuk bulan januari, bulan dan tahun sebelumnya harus dihitung khusus
+    If bulan = 1 Then
+        int_bulanLalu = 12
+        int_tahunLalu = tahun - 1
+    Else
+        int_bulanLalu = bulan - 1
+        int_tahunLalu = tahun
+    End If
+
+    count_hari = 1
+    count_minggu = 1
+    ReDim Preserve Adat_TanggalPeriodeIni(1 To Int_JumlahHariPeriodeIni)
+    
+    For hari = 26 To Int_HariBulanLalu
+        Tanggal = DateSerial(int_tahunLalu, int_bulanLalu, hari)
+        wkday = Weekday(Tanggal)
+        
+        Adat_TanggalPerMingguSatuBulan(count_minggu, wkday) = Tanggal
+        Adat_TanggalPeriodeIni(count_hari) = Tanggal
+        
+        count_hari = count_hari + 1
+        If wkday = 7 Then count_minggu = count_minggu + 1
+    Next hari
+    
+    For hari = 1 To 25
+        Tanggal = DateSerial(tahun, bulan, hari)
+        wkday = Weekday(Tanggal)
+        
+        Adat_TanggalPerMingguSatuBulan(count_minggu, wkday) = Tanggal
+        Adat_TanggalPeriodeIni(count_hari) = Tanggal
+
+        
+        Int_JumlahMingguBulanIni = count_minggu
+        If wkday = 7 Then count_minggu = count_minggu + 1
+        count_hari = count_hari + 1
+    Next hari
+    
+End Sub 'Init_Hari_Untuk_Tanggal_Periode_Ini
+
+'Procedure ini mengisi date array yg berisi tanggal periode ini, Adat_TanggalPeriodeIni.
+'Procedure ini juga mengisi array dua dimensi,  Adat_TanggalPerMingguSatuBulan. Baris ini menunjukkan minggu ke berapa,
+'    dan kolom menunjukkan hari dalam minggu itu.
+Sub Init_Hari_Untuk_Tanggal_Periode_Ini_Pondok(bulan As Integer, tahun As Integer)
+    Dim count_hari As Integer
+    Dim count_minggu As Integer
+    Dim hari As Integer
+    Dim Tanggal As Date
+    Dim wkday As Integer
+    
+    count_hari = 1
+    count_minggu = 1
+    ReDim Preserve Adat_TanggalPeriodeIni(1 To Int_JumlahHariPeriodeIni)
+    
+    For hari = 1 To Int_JumlahHariPeriodeIni
+        Tanggal = DateSerial(tahun, bulan, hari)
+        wkday = Weekday(Tanggal)
+        
+        Adat_TanggalPerMingguSatuBulan(count_minggu, wkday) = Tanggal
+        Adat_TanggalPeriodeIni(count_hari) = Tanggal
+
+        
+        Int_JumlahMingguBulanIni = count_minggu
+        If wkday = 7 Then count_minggu = count_minggu + 1
+        count_hari = count_hari + 1
+    Next hari
+    
+End Sub 'Init_Hari_Untuk_Tanggal_Periode_Ini_Pondok
+
+Sub Init_Masuk_Khusus()
+
+    Dim table As ListObject
+    Dim tblRows As ListRows
+    Dim tblRow As ListRow
+    Dim str_TanggalKhusus
+    Dim astr_stri() As String
+    Dim str_i
+    Dim count_tanggal As Integer
+    Dim count_minggu As Integer
+    Dim count_id As Integer
+    Dim size As Integer
+    Dim Count As Integer
+    Dim wkday As Integer
+    
+    Set table = Worksheets("Jadwal").ListObjects("T_Masuk_Khusus")
+    'Get all the Rows of a table
+    Set tblRows = table.ListRows
+    size = tblRows.Count
+    
+    If (size > 0) Then
+        Bol_MasukKhusus = True
+        Count = 1
+        
+        ReDim TMK_MasukKhusus(1 To size)
+        For Each tblRow In tblRows
+            'Display the value in each row for column 1
+            'The row index will always start at 1, irrespective of its
+            'position on the worksheet
+            count_tanggal = 1
+            count_minggu = 1
+            TMK_MasukKhusus(Count).Sebab = table.DataBodyRange(tblRow.index, 2)
+            TMK_MasukKhusus(Count).JamMasuk = table.DataBodyRange(tblRow.index, 3)
+            TMK_MasukKhusus(Count).JamKeluar = table.DataBodyRange(tblRow.index, 4)
+    
+            str_TanggalKhusus = table.DataBodyRange(tblRow.index, 5)
+            astr_stri = Split(str_TanggalKhusus, ", ")
+            For Each str_i In astr_stri
+                TMK_MasukKhusus(Count).Tanggal(count_tanggal) = CDate(str_i)
+                count_tanggal = count_tanggal + 1
+            Next str_i
+            TMK_MasukKhusus(Count).CountTanggal = count_tanggal - 1
+    
+            count_id = 1
+            str_TanggalKhusus = table.DataBodyRange(tblRow.index, 6)
+            astr_stri = Split(str_TanggalKhusus, ", ")
+            For Each str_i In astr_stri
+                TMK_MasukKhusus(Count).id(count_id) = str_i
+                count_id = count_id + 1
+            Next str_i
+            TMK_MasukKhusus(Count).CountId = count_id - 1
+            
+            Count = Count + 1
+        Next tblRow
+    End If
+
+End Sub 'Init_Masuk_Khusus
+   
+Sub Init_Hari_Piket(index As Integer, tblRow As ListRow, table As ListObject)
+    Dim entri As String
+    Dim str_i As String
+    Dim astr_str_hari() As String
+    Dim var_i As Variant
+    Dim i As Integer
+
+    
+    entri = table.DataBodyRange(tblRow.index, 7)
+    astr_str_hari = Split(entri, ", ")
+    
+    i = 1
+    For Each var_i In astr_str_hari
+        str_i = CStr(var_i)
+        If (str_i <> "") Then
+            HasilAnalisis(index).HariPiket.hari(i) = Konvert_Hari_Ke_Bilangan(str_i)
+            i = i + 1
+        Else
+            Exit For
+        End If
+    Next
+    HasilAnalisis(index).HariPiket.Total = i - 1
+    
+End Sub
+
+Sub Init_Tanggal_Piket_Libur(bulan As Integer, tahun As Integer)
+    Dim wkday As Integer
+    Dim index As Integer
+    Dim sel As Range
+    Dim Is_Tanggal_Piket_Libur As Boolean
+    Dim Cell As Variant
+    Dim tglLibur As Variant
+    
+
+    ReDim Preserve adat_TanggalPiketKhusus(1 To 30)
+
+    index = 1
+    
+    'tentukan hari libur untuk hari2 di bulan lalu (tgl 26 s/d akhir bulan)
+    For Each tglLibur In Adat_TanggalPeriodeIni
+  
+        If Is_Tanggal_Piket_Libur = False Then
+            Set sel = Worksheets("Jadwal").Range("T_Prioritas_Piket[Tanggal]")
+            
+            For Each Cell In sel
+                If (Cell = tglLibur) Then
+                    adat_TanggalPiketKhusus(index) = tglLibur
+                    index = index + 1
+                    Exit For
+                End If
+        Next
+        End If
+    
+    Next tglLibur
+    
+    If index > 1 Then
+     ReDim Preserve adat_TanggalPiketKhusus(1 To (index - 1))
+    End If
+End Sub
+
+Function Is_Tanggal_Piket_Libur(Tanggal As Date) As Boolean
+    Dim index As Integer
+    Dim tanggalPiketLibur As Variant
+
+    index = 1
+    
+    For Each tanggalPiketLibur In adat_TanggalPiketKhusus
+        If (Tanggal = tanggalPiketLibur) Then
+            Is_Tanggal_Piket_Libur = True
+            Exit For
+        End If
+    Next tanggalPiketLibur
+End Function
+    
+      
+'Fungsi ini menginisialisasi array HasilAnalisis
+'input: Table T_Personal di workshee Personal
+'       Table T_Jadwal_Reguler
+'output: parameter .... di modul ini
+
+Sub Init_Hasil_Analisis()
+    
+    Dim table As ListObject
+    Dim table1 As ListObject
+    Dim tblRows As ListRows
+    Dim tblRow As ListRow
+    Dim size As Integer
+    Dim index As Integer
+    Dim index_1 As Integer
+    Dim str_alp As String
+    Dim astr_str_alpa
+    Dim j As Integer
+    Dim str_jam_masuk As String
+    Dim str_jam_keluar As String
+    Dim dat_jam_masuk As Date
+
+    Set table = Worksheets("Personal").ListObjects("T_Personal")
+    'Get all the Rows of a table
+    Set tblRows = table.ListRows
+    size = tblRows.Count
+    ReDim HasilAnalisis(1 To size)
+    index = 1
+    Int_JumlahGukar = 0
+    
+    Set table1 = Worksheets("Jadwal").ListObjects("T_Jadwal_Reguler")
+    str_jam_masuk = Format(table1.DataBodyRange(table1.ListRows(1).index, 1), "hh:mm")
+    str_jam_keluar = Format(table1.DataBodyRange(table1.ListRows(1).index, 2), "hh:mm")
+    
+    For Each tblRow In tblRows
+        'Display the value in each row for column 1
+        'The row index will always start at 1, irrespective of its
+        'position on the worksheet
+        With HasilAnalisis(index)
+            .id = table.DataBodyRange(tblRow.index, 1)
+            .Nama = table.DataBodyRange(tblRow.index, 3)
+            .NRY = table.DataBodyRange(tblRow.index, 4)
+            For j = 1 To 6
+                With .Dpm(j)
+                .JumlahMenitCepatBiasa = 0
+                .JumlahMenitCepatPiket = 0
+                .JumlahMenitIKM = 0
+                .JumlahMenitTelatBiasa = 0
+                .JumlahMenitTelatPiket = 0
+                .JumlahHariCepatBiasa = 0
+                .JumlahHariCepatPiket = 0
+                .JumlahHariIKM = 0
+                .JumlahHariTidakAbsenBiasa = 0
+                .JumlahHariTidakAbsenPiket = 0
+                .JumlahHariTelatBiasa = 0
+                .JumlahHariTelatPiket = 0
+                .JumlahHari = 0
+            
+                With .HariTidakMasukValid
+                    .Cuti = 0
+                    .Izin = 0
+                    .DLNT = 0
+                    .Sakit = 0
+                    .Total = 0
+                    For index_1 = 1 To 7
+                        .Alasan(index_1) = ""
+                        .Tanggal(index_1) = 0
+                    Next index_1
+                End With
+
+                With .HariAnggapMasukValid
+                    .DLTR = 0
+                    .PLTH = 0
+                    '.Pengajian = 0
+                    .Total = 0
+                    For index_1 = 1 To 7
+                        .Alasan(index_1) = ""
+                        .Tanggal(index_1) = 0
+                    Next index_1
+                End With
+
+                With .HariAlpaPerMinggu
+                    .Total = 0
+                For index_1 = 1 To 7
+                    .Alasan(index_1) = ""
+                    .Tanggal(index_1) = 0
+                Next index_1
+                End With
+            End With
+
+            Next j
+            
+            For index_1 = 1 To 31
+            .AlasanKeluar(index_1) = "Reguler"
+            .AlasanMasuk(index_1) = "Reguler"
+            .JamMasuk(index_1) = str_jam_masuk
+            .JamKeluar(index_1) = str_jam_keluar
+            .ScanMasuk(index_1) = 0
+            .ScanKeluar(index_1) = 0
+            Next index_1
+        
+        End With
+        Call Init_Hari_Piket(index, tblRow, table)
+        Int_JumlahGukar = Int_JumlahGukar + 1
+        index = index + 1
+        
+    Next tblRow
+
+End Sub 'Init_Hasil_Analisis
+
+'Procedure ini mengisi date array yg berisi tanggal periode ini, Adat_TanggalPeriodeIni.
+'Procedure ini juga mengisi array dua dimensi,  Adat_TanggalPerMingguSatuBulan. Baris ini menunjukkan minggu ke berapa,
+'    dan kolom menunjukkan hari dalam minggu itu.
+Sub Init_String_Hari_Per_Minggu()
+    Dim count_minggu As Integer
+    Dim hari As Integer
+    Dim Tanggal As Date
+    Dim wkday As Integer
+    Dim gukar_id As Integer
+    Dim i_gukar As Integer
+    
+    ReDim Astr_TanggalPerMiggu(1 To Int_JumlahGukar, 1 To 6)
+    ReDim Aint_JumlahTanggalPerMiggu(1 To Int_JumlahGukar, 1 To 6)
+    ReDim Preserve Adat_TanggalPeriodeIni(1 To Int_JumlahHariPeriodeIni)
+    
+    For i_gukar = 1 To Int_JumlahGukar
+        count_minggu = 1
+        For hari = 1 To Int_JumlahHariPeriodeIni
+            Tanggal = Adat_TanggalPeriodeIni(hari)
+            
+            wkday = Weekday(Tanggal)
+            gukar_id = HasilAnalisis(i_gukar).id
+            If Is_Tanggal_Masuk_Khusus(Tanggal, gukar_id) Or (Not (Is_Tanggal_Libur(Tanggal))) Then
+                Astr_TanggalPerMiggu(i_gukar, count_minggu) = Astr_TanggalPerMiggu(i_gukar, count_minggu) & " " & Format(Tanggal, "dd/mm")
+                Aint_JumlahTanggalPerMiggu(i_gukar, count_minggu) = Aint_JumlahTanggalPerMiggu(i_gukar, count_minggu) + 1
+            End If
+            If wkday = 7 Then count_minggu = count_minggu + 1
+        Next hari
+    Next i_gukar
+    
+    
+    ReDim Preserve Astr_TanggalPerMiggu(1 To Int_JumlahGukar, 1 To Int_JumlahMingguBulanIni)
+    ReDim Preserve Aint_JumlahTanggalPerMiggu(1 To Int_JumlahGukar, 1 To Int_JumlahMingguBulanIni)
+    
+End Sub 'Init_String_Hari_Per_Minggu
+
+Function Init_Tanggal_Akhir(bulan As Integer, tahun As Integer) As Integer
+
+    If bulan < 1 Or bulan > 12 Then MsgBox "Salah Masukan Bulan !"
+
+    'If bulan = 1 Then bulan = 12 --baris ini seharus nya tidak ada
+    Select Case bulan
+        Case 1, 3, 5, 7, 8, 10, 12
+            Int_TanggalAkhirBulanIni = 31
+            Init_Tanggal_Akhir = 31
+        Case 4, 6, 9, 11
+            Init_Tanggal_Akhir = 30
+            Int_TanggalAkhirBulanIni = 30
+        Case 2
+            Init_Tanggal_Akhir = 28
+            Int_TanggalAkhirBulanIni = 28
+            If Is_Tahun_Kabisat(tahun) Then
+                Init_Tanggal_Akhir = 29
+                Int_TanggalAkhirBulanIni = 29
+            End If
+    End Select
+
+End Function 'Init_Tanggal_Akhir
+
+'Fungsi membaca table T_Libur dan T_Libur_Mingguan, dan menginisialisasi array Adat_TanggalLibur
+Sub Init_Tanggal_Libur(bulan As Integer, tahun As Integer)
+    Dim wkday As Integer
+    Dim index As Integer
+    Dim sel As Range
+    Dim Is_Tanggal_Libur As Boolean
+    Dim Tanggal As Variant
+    Dim Cell As Variant
+
+    ReDim Preserve Adat_TanggalLibur(1 To 30)
+
+    index = 1
+    
+    'tentukan hari libur untuk hari2 di bulan lalu (tgl 26 s/d akhir bulan)
+    For Each Tanggal In Adat_TanggalPeriodeIni
+        Is_Tanggal_Libur = False
+        wkday = Weekday(Tanggal)
+        Set sel = Worksheets("Jadwal").Range("T_Libur_Mingguan[Hari]")
+        
+        For Each Cell In sel
+            If ((Cell = "Jumat" And wkday = 6) Or _
+                (Cell = "Sabtu" And wkday = 7) Or _
+                (Cell = "Minggu" And wkday = 1)) Then
+                    Is_Tanggal_Libur = True
+                    Adat_TanggalLibur(index) = Tanggal
+                    index = index + 1
+                    Exit For
+            End If
+        Next
+        
+        If Is_Tanggal_Libur = False Then
+            'See if it's national holiday (tanggal merah)
+            Set sel = Worksheets("Jadwal").Range("T_Libur[Libur]")
+            
+            For Each Cell In sel
+                If (Cell = Tanggal) Then
+                    Adat_TanggalLibur(index) = Tanggal
+                    index = index + 1
+                    Exit For
+                End If
+            Next
+        End If
+    
+    Next Tanggal
+    
+    ReDim Preserve Adat_TanggalLibur(1 To (index - 1))
+
+End Sub 'Init_Tanggal_Libur
+
+Function Is_Hari_Gukar_NonAktif(int_gti As Integer, Tanggal As Date) As Boolean
+
+    Dim int_tgl_tid As Integer
+    Dim i As Integer
+
+
+    Is_Hari_Gukar_NonAktif = False
+    For i = 1 To THA_HariNonAktif(int_gti).Total
+        If THA_HariNonAktif(int_gti).Tanggal(i) = Tanggal Then
+            Is_Hari_Gukar_NonAktif = True
+            Exit For
+        End If
+    Next
+
+End Function
+
+Function Is_Hari_Piket(index As Integer, hari As Integer)
+    Dim i As Integer
+
+    Is_Hari_Piket = False
+    
+    For i = 1 To HasilAnalisis(index).HariPiket.Total
+        If HasilAnalisis(index).HariPiket.hari(i) = hari Then
+            Is_Hari_Piket = True
+            Exit For
+        End If
+    Next
+    
+End Function
+
+Function Is_Tanggal_Libur(Tanggal As Date) As Boolean
+    
+    Dim index As Integer
+    Dim tanggalLibur As Variant
+
+    index = 1
+    
+    For Each tanggalLibur In Adat_TanggalLibur
+        If (Tanggal = tanggalLibur) Then
+            Is_Tanggal_Libur = True
+            Exit For
+        End If
+    Next tanggalLibur
+
+End Function 'Is_Tanggal_Libur
+
+Function Is_Tahun_Kabisat(year As Integer) As Boolean
+    
+    Dim bLY As Boolean
+    '  -- point 1 ---      --- point 2 ----     --- point 3 ----
+    If year Mod 4 = 0 And (year Mod 100 <> 0 Or year Mod 400 = 0) Then bLY = True Else bLY = False
+    Is_Tahun_Kabisat = bLY
+
+End Function 'Is_Tahun_Kabisat
+
+Function Is_Tanggal_Masuk_Khusus(Tanggal As Date, GukarId As Integer) As Boolean
+    
+    Dim size As Integer
+    Dim index As Integer
+    Dim tanggalLibur As Variant
+    Dim selesai As Boolean
+    Dim index_table As Integer
+    Dim index_entry_id As Integer
+    Dim index_entry_tanggal As Integer
+
+    '1. cek di table khusus
+    'cari ukuran table khusus
+    
+    If Bol_MasukKhusus = True Then
+        
+        Is_Tanggal_Masuk_Khusus = False
+        size = UBound(TMK_MasukKhusus, 1) - LBound(TMK_MasukKhusus, 1) + 1
+        
+        'loop over entry2 di table khusus berdasarkan kegiatan
+        selesai = False
+        'index_tabel is to iterate over tabel khusus
+        For index_table = 1 To size
+            'loop over id pada table khusus, periksa apakah ada id dari pegawai di entry ini
+            For index_entry_id = 1 To TMK_MasukKhusus(index_table).CountId
+                If TMK_MasukKhusus(index_table).id(index_entry_id) = GukarId Then
+                    'bila ada id pegawai ini di table, maka lihat apakah tanggal ada di table ini
+                    For index_entry_tanggal = 1 To TMK_MasukKhusus(index_table).CountTanggal
+                        If (TMK_MasukKhusus(index_table).Tanggal(index_entry_tanggal) = Tanggal) Then
+                            Is_Tanggal_Masuk_Khusus = True
+                            selesai = True
+                            Exit For
+                        End If
+                    Next index_entry_tanggal
+                End If
+                If selesai = True Then Exit For
+            Next index_entry_id
+            If selesai = True Then Exit For
+        Next index_table
+    End If
+
+End Function 'Is_Tanggal_Masuk_Khusus
+
+Function Is_Valid_Tidak_Masuk(int_guKar As Integer, Tanggal As Date) As Boolean
+    Dim index As Integer
+    
+    Is_Valid_Tidak_Masuk = False
+    For index = 1 To THA_HariTidakMasukValid(int_guKar).Total
+        If Tanggal = THA_HariTidakMasukValid(int_guKar).Tanggal(index) Then
+            Is_Valid_Tidak_Masuk = True
+        End If
+    Next index
+    
+End Function 'Is_Valid_Tidak_Masuk
+
+Function Is_Valid_Anggap_Masuk(int_guKar As Integer, Tanggal As Date) As Boolean
+    Dim index As Integer
+    
+    Is_Valid_Anggap_Masuk = False
+    For index = 1 To THA_HariAnggapMasukValid(int_guKar).Total
+        If Tanggal = THA_HariAnggapMasukValid(int_guKar).Tanggal(index) Then
+            Is_Valid_Anggap_Masuk = True
+        End If
+    Next index
+    
+End Function 'Is_Valid_Anggap_Masuk
+
+Function Konvert_Bulan_Ke_Bilangan(bulan As String) As Integer
+    Konvert_Bulan_Ke_Bilangan = 0
+    Select Case bulan
+        Case "januari"
+            Konvert_Bulan_Ke_Bilangan = 1
+        Case "februari"
+            Konvert_Bulan_Ke_Bilangan = 2
+        Case "maret"
+            Konvert_Bulan_Ke_Bilangan = 3
+        Case "april"
+            Konvert_Bulan_Ke_Bilangan = 4
+        Case "mei"
+            Konvert_Bulan_Ke_Bilangan = 5
+        Case "juni"
+            Konvert_Bulan_Ke_Bilangan = 6
+        Case "juli"
+            Konvert_Bulan_Ke_Bilangan = 7
+        Case "agustus"
+            Konvert_Bulan_Ke_Bilangan = 8
+        Case "september"
+            Konvert_Bulan_Ke_Bilangan = 9
+        Case "oktober"
+            Konvert_Bulan_Ke_Bilangan = 10
+        Case "november"
+            Konvert_Bulan_Ke_Bilangan = 11
+        Case "desember"
+            Konvert_Bulan_Ke_Bilangan = 12
+    End Select
+   
+End Function 'Konvert_Bulan_Ke_Bilangan
+
+Function Konvert_Bulan_Ke_String(bulan As Integer) As String
+    
+    Konvert_Bulan_Ke_String = "-"
+    Select Case bulan
+        Case 1
+            Konvert_Bulan_Ke_String = "Januari"
+        Case 2
+            Konvert_Bulan_Ke_String = "Februari"
+        Case 3
+            Konvert_Bulan_Ke_String = "Maret"
+        Case 4
+            Konvert_Bulan_Ke_String = "April"
+        Case 5
+            Konvert_Bulan_Ke_String = "Mei"
+        Case 6
+            Konvert_Bulan_Ke_String = "Juni"
+        Case 7
+            Konvert_Bulan_Ke_String = "Juli"
+        Case 8
+            Konvert_Bulan_Ke_String = "Agustus"
+        Case 9
+            Konvert_Bulan_Ke_String = "September"
+        Case 10
+            Konvert_Bulan_Ke_String = "Oktober"
+        Case 11
+            Konvert_Bulan_Ke_String = "November"
+        Case 12
+            Konvert_Bulan_Ke_String = "Desember"
+    End Select
+   
+End Function 'Konvert_Bulan_Ke_String
+
+Function Konvert_Hari_Ke_String(hari As Integer) As String
+    
+    Konvert_Hari_Ke_String = "-"
+    Select Case hari
+        Case 1
+            Konvert_Hari_Ke_String = "Minggu"
+        Case 2
+            Konvert_Hari_Ke_String = "Senin"
+        Case 3
+            Konvert_Hari_Ke_String = "Selasa"
+        Case 4
+            Konvert_Hari_Ke_String = "Rabu"
+        Case 5
+            Konvert_Hari_Ke_String = "Kamis"
+        Case 6
+            Konvert_Hari_Ke_String = "Jumat"
+        Case 7
+            Konvert_Hari_Ke_String = "Sabtu"
+    End Select
+    
+End Function 'Konvert_Hari_Ke_String
+
+Function Konvert_Hari_Ke_Bilangan(hari As String) As Integer
+
+    Konvert_Hari_Ke_Bilangan = 0
+    Select Case hari
+        Case "minggu", "Minggu"
+            Konvert_Hari_Ke_Bilangan = 1
+        Case "senin", "Senin"
+            Konvert_Hari_Ke_Bilangan = 2
+        Case "selasa", "Selasa"
+            Konvert_Hari_Ke_Bilangan = 3
+        Case "rabu", "Rabu"
+            Konvert_Hari_Ke_Bilangan = 4
+        Case "kamis", "Kamis"
+            Konvert_Hari_Ke_Bilangan = 5
+        Case "jumat", "Jumat"
+            Konvert_Hari_Ke_Bilangan = 6
+        Case "sabtu", "Sabtu"
+            Konvert_Hari_Ke_Bilangan = 7
+    End Select
+
+End Function 'Konvert_Hari_Ke_Bilangan
+
+Function Minggu_Ke_Berapa(Tanggal As Date) As Integer
+    Dim i As Integer
+    Dim j As Integer
+    Dim selesai As Boolean
+    
+    Minggu_Ke_Berapa = 0
+    For i = 1 To Int_JumlahMingguBulanIni
+        For j = 1 To 7
+        If (Tanggal = Adat_TanggalPerMingguSatuBulan(i, j)) Then
+            Minggu_Ke_Berapa = i
+            selesai = True
+            Exit For
+        End If
+        Next j
+        If selesai = True Then Exit For
+    Next i
+        
+End Function
+
+Sub Perjelas_Laporan()
+    Dim sh As Worksheet
+    Dim rw As Range
+    Dim cols As Range
+    Dim RowCount As Integer
+    Dim RowCount1 As Integer
+    Dim GukarId As Integer
+    Dim int_index_tanggal As Integer
+    Dim int_ita As Integer 'index tanggal alpa
+    Dim int_gti 'gukar table id
+    Dim str_time As String
+    Dim str_each_time As String
+    Dim bol_next_is_time As Boolean
+    Dim int_str_length As Integer
+    Dim Tanggal As Date
+    Dim dbl_diff As Double
+    Dim dbl_diff_masuk As Double
+    Dim dbl_diff_keluar As Double
+    Dim i As Integer
+    Dim j As Integer
+    Dim m As Integer
+    Dim int_rw_size As Integer
+    Dim search As Boolean
+    Dim var_arr() As Variant
+    Dim id As Integer
+    Dim lng_color As Long
+    Dim int_index As Integer
+    Dim lng_row As Integer
+
+    RowCount1 = 0
+    Set sh = Worksheets("Data")
+    RowCount = sh.UsedRange.Rows.Count
+    bol_next_is_time = False
+    int_gti = 1
+
+    i = 1
+    search = True
+
+    lng_row = Int_JumlahGukar + 10
+    Dim lng_col As Long
+    lng_col = Int_JumlahHariPeriodeIni * 6 + 20
+
+    ReDim var_arr(lng_row + 1, lng_col + 1)
+
+    'give  green for holiday
+    Set cols = sh.UsedRange.Columns
+    For int_index_tanggal = 0 To Int_JumlahHariPeriodeIni - 1
+        Tanggal = Adat_TanggalPeriodeIni(int_index_tanggal + 1)
+        If (Is_Tanggal_Libur(Tanggal)) Then
+            j = (int_index_tanggal * 6) + 6
+            For m = 1 To 6
+                cols(j + m).Interior.Color = vbGreen
+            Next m
+        End If
+    Next
+    
+    For Each rw In sh.UsedRange.Rows
+        If rw.Cells(1, 1) <> 1 And search = True Then
+            i = i + 1
+        Else
+            'size = rw.count
+            search = False
+            var_arr = rw
+            int_rw_size = rw.Columns.Count
+            int_rw_size = UBound(var_arr, 1) - LBound(var_arr, 1) + 1
+            int_rw_size = UBound(var_arr, 2) - LBound(var_arr, 2) + 1
+            id = rw.Cells(1, 1)
+
+            'Make font red for late arrival and early leave
+            For int_index_tanggal = 0 To Int_JumlahHariPeriodeIni - 1
+                j = (int_index_tanggal * 6) + 6
+                If ((var_arr(1, j + 3) * 1440) - (var_arr(1, j + 1) * 1440) > 0) Then
+                    rw.Cells(1, j + 1).Interior.TintAndShade = 0.799981688894314
+                    rw.Cells(1, j + 1).Interior.Color = 255
+                    rw.Cells(1, j + 2).Interior.TintAndShade = 0.799981688894314
+                    rw.Cells(1, j + 2).Interior.Color = 255
+                    rw.Cells(1, j + 3).Interior.TintAndShade = 0.799981688894314
+                    rw.Cells(1, j + 3).Interior.Color = 255
+                End If
+                If ((var_arr(1, j + 4) * 1440) - (var_arr(1, j + 6) * 1440) > 0) Then
+                    rw.Cells(1, j + 4).Interior.TintAndShade = 0.799981688894314
+                    rw.Cells(1, j + 4).Interior.Color = 192
+                    rw.Cells(1, j + 5).Interior.TintAndShade = 0.799981688894314
+                    rw.Cells(1, j + 5).Interior.Color = 192
+                    rw.Cells(1, j + 6).Interior.TintAndShade = 0.799981688894314
+                    rw.Cells(1, j + 6).Interior.Color = 192
+                End If
+
+                Tanggal = Adat_TanggalPeriodeIni(int_index_tanggal + 1)
+                'check if date is valid absence
+                For int_index = 0 To HasilAnalisis(id).Dpb.HariTidakMasukValid.Total
+                    If Tanggal = HasilAnalisis(id).Dpb.HariTidakMasukValid.Tanggal(int_index + 1) Then
+                        lng_color = vbBlue
+                        rw.Cells(1, j + 1).Interior.Color = lng_color
+                        rw.Cells(1, j + 2).Interior.Color = lng_color
+                        rw.Cells(1, j + 3).Interior.Color = lng_color
+                        rw.Cells(1, j + 4).Interior.Color = lng_color
+                        rw.Cells(1, j + 5).Interior.Color = lng_color
+                        rw.Cells(1, j + 6).Interior.Color = lng_color
+                    End If
+                Next int_index
+                
+                Tanggal = Adat_TanggalPeriodeIni(int_index_tanggal + 1)
+                'check if date is valid absence
+                For int_index = 0 To HasilAnalisis(id).Dpb.HariAnggapMasukValid.Total
+                    If Tanggal = HasilAnalisis(id).Dpb.HariAnggapMasukValid.Tanggal(int_index + 1) Then
+                        lng_color = RGB(255, 0, 255) 'magenta
+                        rw.Cells(1, j + 1).Interior.Color = lng_color
+                        rw.Cells(1, j + 2).Interior.Color = lng_color
+                        rw.Cells(1, j + 3).Interior.Color = lng_color
+                        rw.Cells(1, j + 4).Interior.Color = lng_color
+                        rw.Cells(1, j + 5).Interior.Color = lng_color
+                        rw.Cells(1, j + 6).Interior.Color = lng_color
+                    End If
+                Next int_index
+                
+                'check if date is invalid absence
+                For int_index = 0 To HasilAnalisis(id).Dpb.HariAlpa.Total
+                    If Tanggal = HasilAnalisis(id).Dpb.HariAlpa.Tanggal(int_index + 1) Then
+                        lng_color = vbYellow
+                        rw.Cells(1, j + 1).Interior.Color = lng_color
+                        rw.Cells(1, j + 2).Interior.Color = lng_color
+                        rw.Cells(1, j + 3).Interior.Color = lng_color
+                        rw.Cells(1, j + 4).Interior.Color = lng_color
+                        rw.Cells(1, j + 5).Interior.Color = lng_color
+                        rw.Cells(1, j + 6).Interior.Color = lng_color
+                    End If
+                Next int_index
+            
+                'check if date is nonactive absence
+                For int_index = 0 To HasilAnalisis(id).Dpb.HariNonAktif.Total
+                    If Tanggal = HasilAnalisis(id).Dpb.HariNonAktif.Tanggal(int_index + 1) Then
+                        lng_color = vbBlack
+                        rw.Cells(1, j + 1).Interior.Color = lng_color
+                        rw.Cells(1, j + 2).Interior.Color = lng_color
+                        rw.Cells(1, j + 3).Interior.Color = lng_color
+                        rw.Cells(1, j + 4).Interior.Color = lng_color
+                        rw.Cells(1, j + 5).Interior.Color = lng_color
+                        rw.Cells(1, j + 6).Interior.Color = lng_color
+                    End If
+                Next int_index
+            
+            Next
+            i = i + 1
+        End If
+    Next
+
+    j = (Int_JumlahHariPeriodeIni * 6) + 6
+    For m = 2 To 9
+        cols(j + m).Interior.Color = &HFF9900
+    Next m
+
+    j = (Int_JumlahHariPeriodeIni * 6) + 6
+    For m = 11 To 19
+        cols(j + m).Interior.Color = &H339966
+    Next m
+
+End Sub 'Perjelas_Laporan
+
+'Fungsi ini adalah fungsi utama dari software presensi
+
+Function Presensi_Bulan_Ini(bulan As String, tahun As Integer)
+    
+    Dim dat_tanggal As Date
+    Dim int_bulan As Integer
+    Dim rng_idGukar As Range
+    Dim rng As Variant
+    Dim int_bulanLalu As Integer
+    Dim int_tahunLalu As Integer
+    Dim int_countHari As Integer
+    Dim int_itg As Integer
+
+    int_bulan = Konvert_Bulan_Ke_Bilangan(bulan)
+    
+    'untuk bulan januari, bulan dan tahun sebelumnya harus dihitung khusus
+    If int_bulan = 1 Then
+        int_bulanLalu = 12
+        int_tahunLalu = tahun - 1
+    Else
+        int_bulanLalu = int_bulan - 1
+        int_tahunLalu = tahun
+    End If
+    
+    'find unit
+    Str_Unit = UCase(Worksheets("Jadwal").Range("T_Unit[Unit]").Cells(1, 1))
+    
+    Bol_MasukKhusus = False
+    Bol_TanggalKhusus = False
+    Bol_TanggalUmum = False
+    
+    If (Str_Unit = "PONDOK") Then
+        'Pondok memakai periode penggajian mengikuti bulan
+        Int_JumlahHariPeriodeIni = Init_Tanggal_Akhir(int_bulan, tahun)
+        Call Init_Hari_Untuk_Tanggal_Periode_Ini_Pondok(int_bulan, tahun)
+    Else
+        'Unit2 lain memakai tanggal penggajian mulai tanggal 26 bulan lalu
+        Int_HariBulanLalu = Init_Tanggal_Akhir(int_bulanLalu, int_tahunLalu)
+        Int_JumlahHariPeriodeIni = (Int_HariBulanLalu - 26 + 1) + 25
+        Call Init_Hari_Untuk_Tanggal_Periode_Ini(int_bulan, tahun)
+    End If
+
+    'Inisialisasi array HasilAnalasis
+    Call Init_Hasil_Analisis
+    
+    Call Init_Tanggal_Libur(int_bulan, tahun)
+    Call Init_Tanggal_Piket_Libur(int_bulan, tahun)
+    
+    Call Init_Masuk_Khusus
+    
+    Call Init_String_Hari_Per_Minggu
+    
+    Call Init_Hari_Umum
+    
+    Call Init_Hari_Khusus_Normal
+    
+    Call Init_Hari_Khusus_Prioritas
+    
+    Call Init_Hari_Tidak_Masuk_Valid
+    
+    Call Init_Hari_Gukar_NonAktif
+    
+    Set rng_idGukar = Worksheets("Personal").Range("T_Personal[ID]")
+    
+    int_itg = 1
+    
+    For int_countHari = 1 To Int_JumlahHariPeriodeIni
+        dat_tanggal = Adat_TanggalPeriodeIni(int_countHari)
+        If (Is_Tanggal_Libur(dat_tanggal)) Then
+            Call Update_Jam_Masuk_Keluar_Libur(int_countHari)
+        End If
+    Next int_countHari
+    
+    For Each rng In rng_idGukar
+        
+        For int_countHari = 1 To Int_JumlahHariPeriodeIni
+            dat_tanggal = Adat_TanggalPeriodeIni(int_countHari)
+            If Not (Is_Tanggal_Libur(dat_tanggal)) Then
+                'verify if this gukar has special license not to come it this day
+                'Verify of there is a special permit specific gukar
+                Call Set_Jam_Masuk_Keluar(rng.Value, dat_tanggal, int_itg, int_countHari)
+            End If
+        Next int_countHari
+        int_itg = int_itg + 1
+    Next 'next gukar
+    
+    Call Process_Absen_Scan_Table_Row
+    
+    Call Process_Menit_IKM
+    
+    Call Create_Hasil_Worksheet
+    
+    Call Perjelas_Laporan
+    
+    Call Buat_Laporan_Akhir
+    
+    Call Buat_Insentif_Kinerja
+    
+    Presensi_Bulan_Ini = True
+    
+End Function 'Presensi_Bulan_Ini
+
+Sub Process_Absen_Scan_Table_Column()
+
+    Dim sh As Worksheet
+    Dim rw As Range
+    Dim RowCount As Integer
+    Dim RowCount1 As Integer
+    Dim GukarId As Integer
+    Dim int_index_tanggal As Integer
+    
+    Dim int_gti As Integer
+    Dim str_time As String
+    Dim str_each_time As String
+    Dim bol_next_is_time As Boolean
+    Dim int_str_length As Integer
+    Dim Tanggal As Date
+    Dim dbl_diff As Double
+    Dim dbl_diff_masuk As Double
+    Dim dbl_diff_keluar As Double
+    Dim wkday As Integer
+    Dim minggu As Integer
+    Dim dat_jam_masuk As Date
+    Dim dat_jam_keluar As Date
+    
+    'Dim int_ita As Integer 'index tanggal apa
+    
+    RowCount1 = 0
+    Set sh = Worksheets("RecordAbsen")
+    RowCount = sh.UsedRange.Rows.Count
+    bol_next_is_time = False
+    int_gti = 1
+    
+    For Each rw In sh.UsedRange.Rows
+        
+        If bol_next_is_time = True Then
+            minggu = 1
+        
+            For int_index_tanggal = 1 To Int_JumlahHariPeriodeIni
+                
+                Tanggal = Adat_TanggalPeriodeIni(int_index_tanggal)
+                GukarId = HasilAnalisis(int_gti).id
+                
+                str_time = rw.Cells(1, int_index_tanggal)
+                str_time = RTrim(str_time)
+                int_str_length = Len(str_time)
+
+                If str_time <> "" Then
+                    dat_jam_masuk = Left(str_time, 5)
+                    dat_jam_keluar = Right(str_time, 5)
+                End If
+                
+                Call UpdateHasilAnalisis(Tanggal, GukarId, dat_jam_masuk, dat_jam_keluar)
+            
+                wkday = Weekday(Tanggal)
+                If wkday = 7 Then
+                    minggu = minggu + 1
+                End If
+
+            Next int_index_tanggal
+            
+            int_gti = int_gti + 1
+            bol_next_is_time = False
+        
+        End If
+        
+        If bol_next_is_time = False Then
+            If (InStr(rw.Cells(1, 1), "No. ID") > 0) Then
+                If Len(rw.Cells(1, 11)) > 0 Then
+                    GukarId = rw.Cells(1, 3)
+                    If (Get_Gukar_Tindex_Id(GukarId) <> 0) Then
+                        bol_next_is_time = True
+                    End If
+                End If
+            End If
+        End If
+    Next
+        
+End Sub 'Process_Absen_Scan_Table_Column
+
+
+Sub Process_Absen_Scan_Table_Row()
+
+    Dim sh As Worksheet
+    Dim rw As Range
+    Dim RowCount As Integer
+    Dim RowCount1 As Integer
+    Dim GukarId As Integer
+    Dim int_index_tanggal As Integer
+    
+    Dim int_gti As Integer
+    Dim str_time As String
+    Dim str_each_time As String
+    Dim bol_next_is_time As Boolean
+    Dim int_str_length As Integer
+    Dim Tanggal As Date
+    Dim dbl_diff As Double
+    Dim dbl_diff_masuk As Double
+    Dim dbl_diff_keluar As Double
+    Dim wkday As Integer
+    Dim minggu As Integer
+    
+    Dim row As Range
+    Dim colCount As Integer
+    Dim col_id As Integer
+    Dim col_tgl As Integer
+    Dim col_scan_masuk As Integer
+    Dim col_scan_keluar As Integer
+    Dim str_col_name As String
+    Dim i As Integer
+    Dim dat_jam_masuk As Date
+    Dim dat_jam_keluar As Date
+    
+    Dim int_previous_gukar_id As Integer
+    Dim j As Integer
+    
+    RowCount1 = 0
+    Set sh = Worksheets("RecordAbsen")
+    Set row = sh.Rows(1)
+    
+    colCount = sh.UsedRange.Rows(1).Columns.Count
+    RowCount = sh.UsedRange.Rows.Count
+        
+    
+    For i = 1 To colCount
+        str_col_name = row.Cells(1, i)
+        If InStr(str_col_name, "ID") <> 0 Then
+            col_id = i
+        ElseIf InStr(str_col_name, "Tanggal") <> 0 Then
+            col_tgl = i
+        ElseIf InStr(str_col_name, "Masuk") <> 0 Then
+            col_scan_masuk = i
+        ElseIf InStr(str_col_name, "Pulang") <> 0 Then
+            col_scan_keluar = i
+        End If
+    Next i
+    
+    ReDim TIK_InsentifKinerja(1 To Int_JumlahGukar)
+    
+    For i = 2 To RowCount 'skip row 1 since it's row 1 is a title
+        Set row = sh.Rows(i)
+        GukarId = row.Cells(1, col_id)
+        If GukarId = 0 Then GoTo ContinueLoop
+        
+        If ((Str_Unit = "PAUD") Or (Str_Unit = "SDIT") Or (Str_Unit = "SMAIT") Or (Str_Unit = "MANAJEMEN") Or (Str_Unit = "BISNIS")) Then
+            Tanggal = row.Cells(1, col_tgl)
+        Else
+            Tanggal = Convert_Date(row.Cells(1, col_tgl))
+        End If
+        
+        If row.Cells(1, col_scan_masuk) = "" Then
+            dat_jam_masuk = CDate("00:00")
+        Else
+            dat_jam_masuk = CDate(row.Cells(1, col_scan_masuk))
+        End If
+        
+        If row.Cells(1, col_scan_keluar) = "" Then
+            dat_jam_keluar = CDate("00:00")
+        Else
+            dat_jam_keluar = CDate(row.Cells(1, col_scan_keluar))
+        End If
+        
+        int_index_tanggal = Get_Tanggal_Index(Tanggal)
+        int_gti = Get_Gukar_Tindex_Id(GukarId)
+        If int_gti = 0 Then GoTo ContinueLoop
+        minggu = Minggu_Ke_Berapa(Tanggal)
+        
+        Call UpdateHasilAnalisis(Tanggal, GukarId, dat_jam_masuk, dat_jam_keluar)
+
+ContinueLoop:
+    Next i
+        
+End Sub 'Process_Absen_Scan_Table_Row
+
+Sub UpdateHasilAnalisis(Tanggal As Date, GukarId As Integer, dat_jam_masuk As Date, dat_jam_keluar As Date)
+
+    Dim int_gti As Integer
+    Dim int_index_tanggal As Integer
+    Dim minggu As Integer
+    Dim dbl_diff_keluar As Double
+    Dim dbl_diff_masuk As Double
+    Dim index_hari As Integer
+    Dim index_minggu As Integer
+    
+    Dim int_tidak_masuk As Integer
+    Dim int_telat As Integer
+    Dim int_kecepatan As Integer
+    Dim int_tidak_absen As Integer
+    
+    int_gti = Get_Gukar_Tindex_Id(GukarId)
+    int_index_tanggal = Get_Tanggal_Index(Tanggal)
+    minggu = Minggu_Ke_Berapa(Tanggal)
+
+
+        If Is_Tanggal_Masuk_Khusus(Tanggal, GukarId) Or (Not (Is_Tanggal_Libur(Tanggal))) Then
+
+            If (Is_Valid_Tidak_Masuk(int_gti, Tanggal)) Then
+                
+                HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Total = _
+                    HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Total + 1
+                HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Total = _
+                    HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Total + 1
+                index_hari = HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Total
+                index_minggu = HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Total
+                
+                HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Tanggal(index_minggu) = Tanggal
+                HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Alasan(index_minggu) = Get_Valid_Reason(int_gti, Tanggal)
+
+                HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Tanggal(index_hari) = Tanggal
+                HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Alasan(index_hari) = Get_Valid_Reason(int_gti, Tanggal)
+
+                Select Case HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Alasan(index_minggu)
+                    Case "Cuti"
+                        HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Cuti = _
+                        HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Cuti + 1
+
+                        HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Cuti = _
+                        HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Cuti + 1
+                    Case "Izin"
+                        HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Izin = _
+                        HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Izin + 1
+
+                        HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Izin = _
+                        HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Izin + 1
+                    Case "Sakit"
+                        HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Sakit = _
+                        HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Sakit + 1
+
+                        HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Sakit = _
+                        HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.Sakit + 1
+                    Case "DLNT"
+                        HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.DLNT = _
+                        HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.DLNT + 1
+
+                        HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.DLNT = _
+                        HasilAnalisis(int_gti).Dpb.HariTidakMasukValid.DLNT + 1
+                End Select
+
+                HasilAnalisis(int_gti).ScanMasuk(int_index_tanggal) = "00:00"
+                HasilAnalisis(int_gti).ScanKeluar(int_index_tanggal) = "00:00"
+                If HasilAnalisis(int_gti).Dpm(minggu).HariTidakMasukValid.Alasan(index_minggu) = "DLNT" Then
+                    int_tidak_masuk = 0
+                Else
+                    int_tidak_masuk = 1
+                End If
+
+            ElseIf (Is_Valid_Anggap_Masuk(int_gti, Tanggal)) Then
+                
+                HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.Total = _
+                    HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.Total + 1
+                HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.Total = _
+                    HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.Total + 1
+                index_hari = HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.Total
+                index_minggu = HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.Total
+                
+                HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.Tanggal(index_minggu) = Tanggal
+                HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.Alasan(index_minggu) = Get_Valid_Reason(int_gti, Tanggal)
+
+                HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.Tanggal(index_hari) = Tanggal
+                HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.Alasan(index_hari) = Get_Valid_Reason(int_gti, Tanggal)
+
+                Select Case HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.Alasan(index_minggu)
+                    Case "Aktif"
+                        HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.Aktif = _
+                        HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.Aktif + 1
+                        HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.Aktif = _
+                        HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.Aktif + 1
+                    Case "DLTR"
+                        HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.DLTR = _
+                        HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.DLTR + 1
+
+                        HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.DLTR = _
+                        HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.DLTR + 1
+                    Case "PLTH"
+                        HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.PLTH = _
+                        HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.PLTH + 1
+
+                        HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.PLTH = _
+                        HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.PLTH + 1
+                    
+                    'Pengajian
+                    'Case "Pengajian"
+                        'HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.Pengajian = _
+                        'HasilAnalisis(int_gti).Dpm(minggu).HariAnggapMasukValid.Pengajian + 1
+
+                        'HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.Pengajian = _
+                        'HasilAnalisis(int_gti).Dpb.HariAnggapMasukValid.Pengajian + 1
+                            
+                End Select
+
+                HasilAnalisis(int_gti).ScanMasuk(int_index_tanggal) = "00:00"
+                HasilAnalisis(int_gti).ScanKeluar(int_index_tanggal) = "00:00"
+            
+            ElseIf Not Is_Hari_Gukar_NonAktif(int_gti, Tanggal) Then 'nonaktif: belum jadi karyawan atau sudah keluar
+
+                If (dat_jam_masuk = CDate("00:00") And dat_jam_keluar = CDate("00:00")) Then 'gukar sama sekali tidak scan
+                    'Alpa
+                    HasilAnalisis(int_gti).Dpb.HariAlpa.Total = _
+                        HasilAnalisis(int_gti).Dpb.HariAlpa.Total + 1
+                    HasilAnalisis(int_gti).Dpm(minggu).HariAlpaPerMinggu.Total = _
+                        HasilAnalisis(int_gti).Dpm(minggu).HariAlpaPerMinggu.Total + 1
+                    index_hari = HasilAnalisis(int_gti).Dpb.HariAlpa.Total
+                    index_minggu = HasilAnalisis(int_gti).Dpm(minggu).HariAlpaPerMinggu.Total
+                    
+                    HasilAnalisis(int_gti).Dpm(minggu).HariAlpaPerMinggu.Tanggal(index_minggu) = Tanggal
+                    HasilAnalisis(int_gti).Dpm(minggu).HariAlpaPerMinggu.Alasan(index_minggu) = "ALPA"
+
+                    HasilAnalisis(int_gti).Dpb.HariAlpa.Tanggal(index_hari) = Tanggal
+                    HasilAnalisis(int_gti).Dpb.HariAlpa.Alasan(index_hari) = "ALPA"
+
+                    HasilAnalisis(int_gti).ScanMasuk(int_index_tanggal) = "00:00"
+                    HasilAnalisis(int_gti).ScanKeluar(int_index_tanggal) = "00:00"
+                    
+                    int_tidak_masuk = 1
+                
+                ElseIf (dat_jam_masuk = CDate("00:00") Or dat_jam_keluar = CDate("00:00")) Then 'gukar scan hanya saat masuk atau keluar
+                    'Lupa Absen
+                    If (Is_Hari_Piket(int_gti, Weekday(Adat_TanggalPeriodeIni(int_index_tanggal)))) Then 'If (HasilAnalisis(int_gti).HariPiket = Weekday(Adat_TanggalPeriodeIni(int_index_tanggal))) Then
+                        HasilAnalisis(int_gti).Dpm(minggu).JumlahHariTidakAbsenPiket = _
+                            HasilAnalisis(int_gti).Dpm(minggu).JumlahHariTidakAbsenPiket + 1
+
+                        HasilAnalisis(int_gti).Dpb.JumlahHariTidakAbsenPiket = _
+                            HasilAnalisis(int_gti).Dpb.JumlahHariTidakAbsenPiket + 1
+                    Else
+                        HasilAnalisis(int_gti).Dpm(minggu).JumlahHariTidakAbsenBiasa = _
+                            HasilAnalisis(int_gti).Dpm(minggu).JumlahHariTidakAbsenBiasa + 1
+
+                        HasilAnalisis(int_gti).Dpb.JumlahHariTidakAbsenBiasa = _
+                            HasilAnalisis(int_gti).Dpb.JumlahHariTidakAbsenBiasa + 1
+                    End If
+
+                    HasilAnalisis(int_gti).ScanMasuk(int_index_tanggal) = dat_jam_masuk 'Left(str_time, 5)
+                    HasilAnalisis(int_gti).ScanKeluar(int_index_tanggal) = dat_jam_keluar
+                    
+                    'Sekalipun sudah dianggap tidak absen, tetapi telat dan pulang cepat tetap dihitung
+                    If dat_jam_masuk = CDate("00:00") Then
+                    'lihat apakah gukar ini pulang cepat
+                        dbl_diff_keluar = (HasilAnalisis(int_gti).JamKeluar(int_index_tanggal) - _
+                                      HasilAnalisis(int_gti).ScanKeluar(int_index_tanggal)) * 1440
+
+                        If (dbl_diff_keluar > 0) Then
+                            Call TambahkanMenitCepatPulang(int_gti, int_index_tanggal, minggu, dbl_diff_keluar)
+                            int_kecepatan = 1
+                        End If
+                        int_telat = 1
+                    
+                    Else
+                    'lihat apakah gukar ini telat datang
+                        dbl_diff_masuk = (HasilAnalisis(int_gti).ScanMasuk(int_index_tanggal) - _
+                                HasilAnalisis(int_gti).JamMasuk(int_index_tanggal)) * 1440
+
+                        If (dbl_diff_masuk > 0) Then
+                            Call TambahkanMenitTelatMasuk(int_gti, int_index_tanggal, minggu, dbl_diff_masuk)
+                            int_telat = 1
+                        End If
+                        int_kecepatan = 1
+                    
+                    End If
+                    
+                    int_tidak_absen = 1
+                
+                Else 'gukar scan saat masuk da keluar
+                    HasilAnalisis(int_gti).ScanMasuk(int_index_tanggal) = dat_jam_masuk 'Left(str_time, 5)
+                    HasilAnalisis(int_gti).ScanKeluar(int_index_tanggal) = dat_jam_keluar 'Right(str_time, 5)
+                    
+                    dbl_diff_masuk = (HasilAnalisis(int_gti).ScanMasuk(int_index_tanggal) - _
+                            HasilAnalisis(int_gti).JamMasuk(int_index_tanggal)) * 1440
+                    If (dbl_diff_masuk > 0) Then
+                        Call TambahkanMenitTelatMasuk(int_gti, int_index_tanggal, minggu, dbl_diff_masuk)
+                        int_telat = 1
+                    End If
+
+                    dbl_diff_keluar = (HasilAnalisis(int_gti).JamKeluar(int_index_tanggal) - _
+                                      HasilAnalisis(int_gti).ScanKeluar(int_index_tanggal)) * 1440
+                    If (dbl_diff_keluar > 0) Then
+                        Call TambahkanMenitCepatPulang(int_gti, int_index_tanggal, minggu, dbl_diff_keluar)
+                        int_kecepatan = 1
+                    End If
+
+                End If
+
+            End If
+            If Not Is_Hari_Gukar_NonAktif(int_gti, Tanggal) Then
+                HasilAnalisis(int_gti).Dpm(minggu).JumlahHari = _
+                                    HasilAnalisis(int_gti).Dpm(minggu).JumlahHari + 1
+        
+                 HasilAnalisis(int_gti).Dpb.JumlahHari = _
+                                    HasilAnalisis(int_gti).Dpb.JumlahHari + 1
+            End If
+
+            
+            If (Is_Hari_Piket(int_gti, Weekday(Adat_TanggalPeriodeIni(int_index_tanggal)))) Then '(HasilAnalisis(int_gti).HariPiket = Weekday(Adat_TanggalPeriodeIni(int_index_tanggal))) Then
+            'If (HasilAnalisis(int_gti).HariPiket = Weekday(Adat_TanggalPeriodeIni(int_index_tanggal))) Then
+                TIK_InsentifKinerja(int_gti).PenguranganHariEfektif = TIK_InsentifKinerja(int_gti).PenguranganHariEfektif + 1
+                If int_tidak_masuk Then
+                    TIK_InsentifKinerja(int_gti).PiketJalankan = TIK_InsentifKinerja(int_gti).PiketJalankan + 1
+                    TIK_InsentifKinerja(int_gti).PiketHadirTepatWaktu = TIK_InsentifKinerja(int_gti).PiketHadirTepatWaktu + 1
+                    TIK_InsentifKinerja(int_gti).PiketPulangTepatWaktu = TIK_InsentifKinerja(int_gti).PiketPulangTepatWaktu + 1
+                End If
+                If (((Not int_tidak_masuk) Or int_tidak_absen) And int_telat) Then
+                    TIK_InsentifKinerja(int_gti).PiketJalankan = TIK_InsentifKinerja(int_gti).PiketJalankan + 1
+                    TIK_InsentifKinerja(int_gti).PiketHadirTepatWaktu = TIK_InsentifKinerja(int_gti).PiketHadirTepatWaktu + 1
+                End If
+                If (((Not int_tidak_masuk) Or int_tidak_absen) And int_kecepatan) Then
+                    TIK_InsentifKinerja(int_gti).PiketJalankan = TIK_InsentifKinerja(int_gti).PiketJalankan + 1
+                    TIK_InsentifKinerja(int_gti).PiketPulangTepatWaktu = TIK_InsentifKinerja(int_gti).PiketPulangTepatWaktu + 1
+                End If
+            Else
+                If int_tidak_masuk Then
+                    TIK_InsentifKinerja(int_gti).HadirTepatWaktu = TIK_InsentifKinerja(int_gti).HadirTepatWaktu + 1
+                    TIK_InsentifKinerja(int_gti).PulangTepatWaktu = TIK_InsentifKinerja(int_gti).PulangTepatWaktu + 1
+                End If
+                If (((Not int_tidak_masuk) Or int_tidak_absen) And int_telat) Then
+                    TIK_InsentifKinerja(int_gti).HadirTepatWaktu = TIK_InsentifKinerja(int_gti).HadirTepatWaktu + 1
+                End If
+                If (((Not int_tidak_masuk) Or int_tidak_absen) And int_kecepatan) Then
+                    TIK_InsentifKinerja(int_gti).PulangTepatWaktu = TIK_InsentifKinerja(int_gti).PulangTepatWaktu + 1
+                End If
+            End If
+        
+        End If
+End Sub
+
+Sub TambahkanMenitTelatMasuk(int_gti As Integer, int_index_tanggal As Integer, minggu As Integer, dbl_diff_masuk As Double)
+    If (Is_Hari_Piket(int_gti, Weekday(Adat_TanggalPeriodeIni(int_index_tanggal)))) Then '(HasilAnalisis(int_gti).HariPiket = Weekday(Adat_TanggalPeriodeIni(int_index_tanggal))) Then
+    'If (HasilAnalisis(int_gti).HariPiket = Weekday(Adat_TanggalPeriodeIni(int_index_tanggal))) Then
+        HasilAnalisis(int_gti).Dpm(minggu).JumlahMenitTelatPiket = _
+            HasilAnalisis(int_gti).Dpm(minggu).JumlahMenitTelatPiket + dbl_diff_masuk
+        HasilAnalisis(int_gti).Dpm(minggu).JumlahHariTelatPiket = _
+            HasilAnalisis(int_gti).Dpm(minggu).JumlahHariTelatPiket + 1
+
+        HasilAnalisis(int_gti).Dpb.JumlahMenitTelatPiket = _
+            HasilAnalisis(int_gti).Dpb.JumlahMenitTelatPiket + dbl_diff_masuk
+        HasilAnalisis(int_gti).Dpb.JumlahHariTelatPiket = _
+            HasilAnalisis(int_gti).Dpb.JumlahHariTelatPiket + 1
+    Else
+        HasilAnalisis(int_gti).Dpm(minggu).JumlahMenitTelatBiasa = _
+            HasilAnalisis(int_gti).Dpm(minggu).JumlahMenitTelatBiasa + dbl_diff_masuk
+        HasilAnalisis(int_gti).Dpm(minggu).JumlahHariTelatBiasa = _
+            HasilAnalisis(int_gti).Dpm(minggu).JumlahHariTelatBiasa + 1
+
+        HasilAnalisis(int_gti).Dpb.JumlahMenitTelatBiasa = _
+            HasilAnalisis(int_gti).Dpb.JumlahMenitTelatBiasa + dbl_diff_masuk
+        HasilAnalisis(int_gti).Dpb.JumlahHariTelatBiasa = _
+            HasilAnalisis(int_gti).Dpb.JumlahHariTelatBiasa + 1
+    End If
+
+
+End Sub
+
+Sub TambahkanMenitCepatPulang(int_gti As Integer, int_index_tanggal As Integer, minggu As Integer, dbl_diff_keluar As Double)
+    If (Is_Hari_Piket(int_gti, Weekday(Adat_TanggalPeriodeIni(int_index_tanggal)))) Then '(HasilAnalisis(int_gti).HariPiket = Weekday(Adat_TanggalPeriodeIni(int_index_tanggal))) Then
+    'If (HasilAnalisis(int_gti).HariPiket = Weekday(Adat_TanggalPeriodeIni(int_index_tanggal))) Then
+        HasilAnalisis(int_gti).Dpm(minggu).JumlahMenitCepatPiket = _
+            HasilAnalisis(int_gti).Dpm(minggu).JumlahMenitCepatPiket + dbl_diff_keluar
+        HasilAnalisis(int_gti).Dpm(minggu).JumlahHariCepatPiket = _
+            HasilAnalisis(int_gti).Dpm(minggu).JumlahHariCepatPiket + 1
+
+        HasilAnalisis(int_gti).Dpb.JumlahMenitCepatPiket = _
+            HasilAnalisis(int_gti).Dpb.JumlahMenitCepatPiket + dbl_diff_keluar
+        HasilAnalisis(int_gti).Dpb.JumlahHariCepatPiket = _
+            HasilAnalisis(int_gti).Dpb.JumlahHariCepatPiket + 1
+    Else
+        HasilAnalisis(int_gti).Dpm(minggu).JumlahMenitCepatBiasa = _
+            HasilAnalisis(int_gti).Dpm(minggu).JumlahMenitCepatBiasa + dbl_diff_keluar
+        HasilAnalisis(int_gti).Dpm(minggu).JumlahHariCepatBiasa = _
+            HasilAnalisis(int_gti).Dpm(minggu).JumlahHariCepatBiasa + 1
+
+        HasilAnalisis(int_gti).Dpb.JumlahMenitCepatBiasa = _
+            HasilAnalisis(int_gti).Dpb.JumlahMenitCepatBiasa + dbl_diff_keluar
+        HasilAnalisis(int_gti).Dpb.JumlahHariCepatBiasa = _
+            HasilAnalisis(int_gti).Dpb.JumlahHariCepatBiasa + 1
+    End If
+
+End Sub
+
+Sub Process_Menit_IKM()
+    Dim int_gti As Integer
+    Dim table As ListObject
+    Dim tblRows As ListRows
+    Dim tblRow As ListRow
+    Dim menit As Variant
+    Dim rng As Range
+    Dim minggu As Integer
+    Dim int_index_tanggal As Integer
+    Dim Tanggal As Date
+    Dim wkday As Integer
+    Dim menit_ikm As Integer
+
+    Set table = Worksheets("IKM").ListObjects("T_IKM")
+    'Get all the Rows of a table
+    Set tblRows = table.ListRows
+
+    int_gti = 1
+    For Each tblRow In tblRows
+        'Display the value in each row for column 1
+        'The row index will always start at 1, irrespective of its
+        'position on the worksheet
+        'count_tanggal = 1
+        minggu = 1
+        For int_index_tanggal = 1 To Int_JumlahHariPeriodeIni
+            Tanggal = Adat_TanggalPeriodeIni(int_index_tanggal)
+
+            menit_ikm = tblRow.Range.Cells(1, int_index_tanggal + 4).Value
+            If menit_ikm > 0 Then
+                HasilAnalisis(int_gti).Dpm(minggu).JumlahMenitIKM = _
+                    HasilAnalisis(int_gti).Dpm(minggu).JumlahMenitIKM + menit_ikm
+                HasilAnalisis(int_gti).Dpm(minggu).JumlahHariIKM = _
+                    HasilAnalisis(int_gti).Dpm(minggu).JumlahHariIKM + 1
+                TIK_InsentifKinerja(int_gti).FullLokasi = _
+                    TIK_InsentifKinerja(int_gti).FullLokasi + 1
+            ElseIf menit_ikm = -1 Then
+                TIK_InsentifKinerja(int_gti).FullLokasi = _
+                    TIK_InsentifKinerja(int_gti).FullLokasi + 1
+            End If
+            wkday = Weekday(Tanggal)
+            If wkday = 7 Then
+                minggu = minggu + 1
+            End If
+        Next int_index_tanggal
+        'tblRow.Range.Cells(1, menit + 1).Value = HasilAnalisis(int_gti).JumlahMenitIKM
+        int_gti = int_gti + 1
+    Next
+    
+End Sub 'Process_Menit_IKM
+
+Sub Set_Jam_Masuk_Keluar(gukar_id As Integer, Tanggal As Date, index_gukar_table As Integer, index_hari As Integer)
+    '1. Jam Masuk berdasarkan apakah guru ini piket atau tidak.
+    '2. Find out jam keluar untuk guru ini pada hari ini
+    '3. Cari di table umum dulu (uts, kegiatan sekolah, AKTIF (lampu mati), dll)
+    '4. Setelah itu di table khusus (berdasarkan ID guru
+    Dim dat_jamMasuk As Date
+    Dim dat_jamKeluar As Date
+    Dim index_table As Integer
+    Dim index_entry As Integer
+    Dim index_entry_tanggal As Integer
+    Dim size As Integer
+    Dim Count As Integer
+    Dim selesai As Boolean
+    Dim table As ListObject
+    Dim tblRows As ListRows
+    Dim tblRow As ListRow
+
+
+
+    'Now check the special table
+    
+    'verify that the index is for the correct id
+    If Not (HasilAnalisis(index_gukar_table).id = gukar_id) Then
+        MsgBox "Wrong id " & gukar_id & "for table index " & index_gukar_table
+    End If
+    
+    'I. Isi jam masuk dan keluar setiap pegawai berdasarkan table khusus, umum, dan jadwal piket
+    
+    'kita cek tabel2 pengecualian dengan prioritas sebagai berikut (dari rendah ke tinggi)
+    '1. cek di tabel khusus (qiraati, guru kelas 3, dsb
+    '2. setelah itu cek di tabel umum (musim uts, uas, hari jumat, dsb)
+    '3. Piket selalu masuk jam 6:30, apapun keadaannya, jadi ini paling tinggi untuk menentukan jam masuk
+    
+    '1. cek di table khusus
+    If (Bol_TanggalKhusus = True) Then
+        'cari ukuran table khusus
+        size = UBound(TTCK_TanggalCountKhusus, 1) - LBound(TTCK_TanggalCountKhusus, 1) + 1
+        'loop over entry2 di table khusus berdasarkan kegiatan
+        selesai = False
+        'index_tabel is to iterate over tabel khusus
+        For index_table = 1 To size
+            'loop over id pada table khusus, periksa apakah ada id dari pegawai di entry ini
+            For index_entry = 1 To TTCK_TanggalCountKhusus(index_table).CountId
+                If TTCK_TanggalCountKhusus(index_table).id(index_entry) = gukar_id Then
+                    'bila ada id pegawai ini di table, maka lihat apakah tanggal ada di table ini
+                    For index_entry_tanggal = 1 To TTCK_TanggalCountKhusus(index_table).CountTanggal
+                        If (TTCK_TanggalCountKhusus(index_table).Tanggal(index_entry_tanggal) = Tanggal) Then
+                            HasilAnalisis(index_gukar_table).JamMasuk(index_hari) = TTCK_TanggalCountKhusus(index_table).JamMasuk
+                            HasilAnalisis(index_gukar_table).AlasanMasuk(index_hari) = TTCK_TanggalCountKhusus(index_table).Sebab
+                            HasilAnalisis(index_gukar_table).JamKeluar(index_hari) = TTCK_TanggalCountKhusus(index_table).JamKeluar
+                            HasilAnalisis(index_gukar_table).AlasanKeluar(index_hari) = TTCK_TanggalCountKhusus(index_table).Sebab
+                            selesai = True
+                            Exit For
+                        End If
+                    Next index_entry_tanggal
+                End If
+                If selesai = True Then Exit For
+            Next index_entry
+            If selesai = True Then Exit For
+        Next index_table
+    End If
+    
+    
+    If (Bol_TanggalUmum = True) Then
+        '2. cek di table umum
+        'cari ukuran table umum
+        size = UBound(TTCU_TanggalCountUmum, 1) - LBound(TTCU_TanggalCountUmum, 1) + 1
+        'loop over entry2 di table umum berdasarkan kegiatan
+        selesai = False
+        'index_tabel is to iterate over tabel umum
+        For index_table = 1 To size
+            'loop over id pada table umum, periksa apakah ada id dari pegawai di entry ini
+            For index_entry_tanggal = 1 To TTCU_TanggalCountUmum(index_table).CountTanggal
+                If (TTCU_TanggalCountUmum(index_table).Tanggal(index_entry_tanggal) = Tanggal) Then
+                    HasilAnalisis(index_gukar_table).JamMasuk(index_hari) = TTCU_TanggalCountUmum(index_table).JamMasuk
+                    HasilAnalisis(index_gukar_table).AlasanMasuk(index_hari) = TTCU_TanggalCountUmum(index_table).Sebab
+                    HasilAnalisis(index_gukar_table).JamKeluar(index_hari) = TTCU_TanggalCountUmum(index_table).JamKeluar
+                    HasilAnalisis(index_gukar_table).AlasanKeluar(index_hari) = TTCU_TanggalCountUmum(index_table).Sebab
+                    selesai = True
+                    Exit For
+                End If
+            Next index_entry_tanggal
+            If selesai = True Then Exit For
+        Next index_table
+    End If
+
+    'HasilAnalisis
+    'cek bila hari ini piket
+    If (Is_Hari_Piket(index_gukar_table, Weekday(Tanggal)) And Not (Is_Tanggal_Piket_Libur(Tanggal))) Then '(HasilAnalisis(index_gukar_table).HariPiket = Weekday(tanggal)) Then
+    'If (HasilAnalisis(index_gukar_table).HariPiket = Weekday(tanggal)) Then
+        Set table = Worksheets("Jadwal").ListObjects("T_Jadwal_Piket")
+        Set tblRows = table.ListRows
+        For Each tblRow In tblRows
+            If (Is_Hari_Piket(index_gukar_table, Konvert_Hari_Ke_Bilangan(table.DataBodyRange(tblRow.index, 1)))) Then 'Konvert_Hari_Ke_Bilangan(table.DataBodyRange(tblRow.index, 1)) = HasilAnalisis(index_gukar_table).HariPiket Then
+            'If Konvert_Hari_Ke_Bilangan(table.DataBodyRange(tblRow.index, 1)) = HasilAnalisis(index_gukar_table).HariPiket Then
+                HasilAnalisis(index_gukar_table).JamMasuk(index_hari) = Format(table.DataBodyRange(tblRow.index, 2), "hh:mm")
+                HasilAnalisis(index_gukar_table).AlasanMasuk(index_hari) = "Piket"
+                HasilAnalisis(index_gukar_table).JamKeluar(index_hari) = Format(table.DataBodyRange(tblRow.index, 3), "hh:mm")
+                HasilAnalisis(index_gukar_table).AlasanKeluar(index_hari) = "Piket"
+            End If
+        Next
+    End If
+
+    'ini harus terakhir
+    If (Bol_TanggalKhusus_Prioritas = True) Then
+        'cari ukuran table khusus
+        size = UBound(TTCK_TanggalCountKhususPrioritas, 1) - LBound(TTCK_TanggalCountKhususPrioritas, 1) + 1
+        'loop over entry2 di table khusus berdasarkan kegiatan
+        selesai = False
+        'index_tabel is to iterate over tabel khusus
+        For index_table = 1 To size
+            'loop over id pada table khusus, periksa apakah ada id dari pegawai di entry ini
+            For index_entry = 1 To TTCK_TanggalCountKhususPrioritas(index_table).CountId
+                If TTCK_TanggalCountKhususPrioritas(index_table).id(index_entry) = gukar_id Then
+                    'bila ada id pegawai ini di table, maka lihat apakah tanggal ada di table ini
+                    For index_entry_tanggal = 1 To TTCK_TanggalCountKhususPrioritas(index_table).CountTanggal
+                        If (TTCK_TanggalCountKhususPrioritas(index_table).Tanggal(index_entry_tanggal) = Tanggal) Then
+                            HasilAnalisis(index_gukar_table).JamMasuk(index_hari) = TTCK_TanggalCountKhususPrioritas(index_table).JamMasuk
+                            HasilAnalisis(index_gukar_table).AlasanMasuk(index_hari) = TTCK_TanggalCountKhususPrioritas(index_table).Sebab
+                            HasilAnalisis(index_gukar_table).JamKeluar(index_hari) = TTCK_TanggalCountKhususPrioritas(index_table).JamKeluar
+                            HasilAnalisis(index_gukar_table).AlasanKeluar(index_hari) = TTCK_TanggalCountKhususPrioritas(index_table).Sebab
+                            selesai = True
+                            Exit For
+                        End If
+                    Next index_entry_tanggal
+                End If
+                If selesai = True Then Exit For
+            Next index_entry
+            If selesai = True Then Exit For
+        Next index_table
+    End If
+    
+
+End Sub
+
+Sub Test_Init_Tanggal_Akhir()
+    
+    Dim bulan As String
+    Dim tahun As Integer
+    Dim int_bulan As Integer
+    
+    If bulan = "" Then
+        MsgBox "masukan bulan berapa yang mau di inginkan"
+    ElseIf tahun = 0 Then
+        MsgBox "Masukan tahun berapa yang di inginkan"
+    Else
+        bulan = InputBox("nama bulan?", "Nama Bulan")
+        tahun = InputBox("tahun berapa?", "Tahun")
+    
+        bulan = LCase(bulan)
+        int_bulan = Konvert_Bulan_Ke_Bilangan(bulan)
+     Call Init_Tanggal_Akhir(int_bulan, tahun)
+     MsgBox "bulan " & bulan & " tahun " & tahun & " tanggal akhir " & Int_TanggalAkhirBulanIni
+    
+    End If
+End Sub 'Test_Init_Tanggal_Akhir
+'main program
+Sub Test_Presensi_Bulan_Ini()
+    
+    Dim bulan As String
+    Dim tahun As Integer
+    Dim retVal As Boolean
+    Dim tahunV As Variant
+    
+    bulan = InputBox("Nama Bulan Presensi?", "Nama Bulan")
+    'untuk bulan jika kosong
+    'cara membuat sesuai bulan yang diinginkan ?
+    If bulan = "" Then
+        MsgBox "Belum mengisi bulan!"
+        Exit Sub
+    End If
+    
+   If IsNumeric(bulan) Then
+        MsgBox "Bulan Hanya Bisa di Input Dengan Huruf[A - Z]"
+        Exit Sub
+   End If
+
+    bulan = LCase(bulan)
+    
+   
+    tahunV = InputBox("Di isi sesuai tahun sekarang(Sesuai tahun di RecordAbsen)", "tahun") 'Hanya bisa pada saat tahun ini tidak bisa untuk tahun berikut nya atau sebelum nya.
+    'untuk tahun jika kosong
+    
+     If tahunV = "" Then
+        MsgBox "Belum mengisi tahun !"
+        Exit Sub
+    End If
+    
+    If tahunV = year(Now()) Then
+        MsgBox "Inputan harus sesuai tahun sekarang"
+    End If
+    'If tahunV(tahunV.Now) Then
+     '   MsgBox "Tahun masih tidak valid"
+    If Not IsNumeric(tahunV) Then
+        MsgBox "inputan tahun salah :" & " " & tahunV
+        Exit Sub
+    Else
+        'sebuah angka yang dapat berubah menjadi konverter ke int / dijadikan variant variable di vba
+        tahun = CInt(tahunV)
+        retVal = Presensi_Bulan_Ini(bulan, tahun)
+    End If
+        
+        
+    End Sub 'Test_Presensi_Bulan_Ini
+
+Sub Test_Process_IKM()
+
+    Call Init_Hasil_Analisis
+    Call Process_Menit_IKM
+
+End Sub 'Test_Process_IKM
+
+
+'Index_Hari is an index to specific date from the entry
+'Jam masuk keluar hari libur di set 00:00
+'Fungsi ini juga menset jam masuk dan keluar untuk hari masuk khusus
+
+Sub Update_Jam_Masuk_Keluar_Libur(index_hari As Integer)
+    'Dim index_gukar_table As Integer
+    Dim gukar_tid As Integer
+    Dim Tanggal As Date
+    Dim i_tgl As Integer
+    Dim i_tbl As Integer
+    Dim i_id As Integer
+    Dim gukar_id As Integer
+    Dim index_table As Integer
+    Dim size As Integer
+    Dim index_gukar_table As Integer
+    
+    
+    'Initiliaze all with 00:00
+    For index_gukar_table = 1 To Int_JumlahGukar
+        HasilAnalisis(index_gukar_table).JamKeluar(index_hari) = "00:00"
+        HasilAnalisis(index_gukar_table).JamMasuk(index_hari) = "00:00"
+    Next index_gukar_table
+    
+    
+    'Perbaiki jam masuk keluar untuk gukar yang harus masuk sekalipun ini hari libur
+    If Bol_MasukKhusus = True Then
+        size = UBound(TMK_MasukKhusus, 1) - LBound(TMK_MasukKhusus, 1) + 1
+        Tanggal = Adat_TanggalPeriodeIni(index_hari)
+    
+        For index_table = 1 To size
+        'No early exit for this loop we might have same date in another entry (maybe for different gukar)
+            
+            For i_tgl = 1 To TMK_MasukKhusus(index_table).CountTanggal
+        
+                If Tanggal = TMK_MasukKhusus(index_table).Tanggal(i_tgl) Then
+            
+                    For i_id = 1 To TMK_MasukKhusus(index_table).CountId
+                        gukar_id = TMK_MasukKhusus(index_table).id(i_id)
+                        gukar_tid = Get_Gukar_Tindex_Id(gukar_id)
+                    
+                        HasilAnalisis(gukar_tid).JamKeluar(index_hari) = TMK_MasukKhusus(index_table).JamKeluar
+                        HasilAnalisis(gukar_tid).JamMasuk(index_hari) = TMK_MasukKhusus(index_table).JamMasuk
+                        HasilAnalisis(gukar_tid).AlasanKeluar(index_hari) = TMK_MasukKhusus(index_table).Sebab
+                        HasilAnalisis(gukar_tid).AlasanMasuk(index_hari) = TMK_MasukKhusus(index_table).Sebab
+                    Next i_id
+                    Exit For
+    
+                End If
+            
+            Next i_tgl
+                
+        Next index_table
+    End If
+
+End Sub 'Update_Jam_Masuk_Keluar_Libur
+
+Sub Print_Tanggal_Periode_Ini()
+    Dim i As Integer, j As Integer, Tanggal As Date, int_tanggal As Long, var_tanggal As Variant
+    Dim str_msgbox As String
+    
+    For j = 1 To Int_JumlahHariPeriodeIni
+        Tanggal = Adat_TanggalPeriodeIni(j)
+        int_tanggal = Tanggal
+        var_tanggal = Adat_TanggalPeriodeIni(j)
+        
+        str_msgbox = str_msgbox & j & " " & VarType(Tanggal) & " " & Tanggal & " " & int_tanggal & " " _
+                                & var_tanggal & "   "
+        
+    Next j
+    MsgBox str_msgbox
+
+End Sub 'Print_Tanggal_Periode_Ini
+
+
+
+
+'----------------------------------------------------------------------------------------------------------------'
+'----------------------------------------------------------------------------------------------------------------'
+'----------------------------------------------------------------------------------------------------------------'
+'------------------------Laporan-Harian--------------------------------------------------------------------------'
+'----------------------------------------------------------------------------------------------------------------'
+'----------------------------------------------------------------------------------------------------------------'
+'----------------------------------------------------------------------------------------------------------------'
+
+Sub LaporanHarian()
+
+    'Initialize jam masuk dan jam keluar hari ini
+    Call InitJamMasukKeluarHarian
+    
+    'Baca dan bandingkan scan masuk dan scan keluar dengan jam masuk dan jam keluar
+    Call ProcessRecordAbsenHarian
+    
+    'Print out laporan harian
+    Call BuatLaporanAKhirHarian
+End Sub
+
+
+Sub InitJamMasukKeluarHarian()
+
+    Dim int_personal_kolom_id As Integer
+    Dim int_personal_kolom_nama As Integer
+    Dim int_personal_kolom_guru_qiroati As Integer
+    Dim int_personal_kolom_piket As Integer
+    Dim int_personal_kolom_cuti As Integer
+    Dim int_personal_kolom_izin As Integer
+    Dim int_personal_kolom_sakit As Integer
+    Dim int_personal_kolom_dltr As Integer
+    Dim int_personal_kolom_dlnt As Integer
+    Dim int_personal_kolom_plth As Integer
+    'Dim int_personal_kolom_pengajian As Integer
+    Dim int_personal_kolom_aktif As Integer
+    Dim int_personal_kolom_ikm As Integer
+    
+    Dim int_t_khusus_kolom_id As Integer
+    Dim int_t_khusus_kolom_jam_masuk As Integer
+    Dim int_t_khusus_kolom_jam_keluar As Integer
+    Dim int_t_khusus_kolom_alasan As Integer
+    Dim str_t_khusus_id As String
+    Dim aint_id() As String
+    
+    Dim table As ListObject
+    Dim tblRows As ListRows
+    Dim tblRow As ListRow
+    Dim str_TanggalUmum
+    Dim astr_stri() As String
+    Dim str_i
+    Dim Count As Integer
+    Dim count_1 As Integer
+    Dim size As Integer
+    Dim int_row_count As Integer
+    Dim str_izin As String
+    Dim chr_izin As Characters
+    Dim i As Integer
+    Dim j As Integer
+    Dim k
+    
+    Dim dat_jam_masuk As Date
+    Dim dat_jam_keluar As Date
+    Dim int_size_t_khusus As Integer
+    
+   
+    'Baca Table Personal
+    'Hardcoded for now
+    int_personal_kolom_id = 1
+    int_personal_kolom_nama = 2
+    int_personal_kolom_guru_qiroati = 5
+    int_personal_kolom_piket = 6
+    int_personal_kolom_cuti = 7
+    int_personal_kolom_izin = 8
+    int_personal_kolom_sakit = 9
+    int_personal_kolom_dltr = 10
+    int_personal_kolom_dlnt = 11
+    int_personal_kolom_plth = 12
+    'int_personal_kolom_pengajian = 13
+    int_personal_kolom_aktif = 14
+    int_personal_kolom_ikm = 15
+    Set table = Worksheets("Personal-Harian").ListObjects("T_Personal_Harian")
+    'Get all the Rows of a table
+    Set tblRows = table.ListRows
+    size = tblRows.Count
+
+    'TLH_LaporanHarian
+    ReDim TLH_LaporanHarian(size)
+    Int_Size_Laporan_Harian = size
+
+    'Isi data TLH_LaporanHarian dari table Personal
+    
+    'int_row_count = Worksheets("Personal").UsedRange.Rows.Count
+        
+    
+    For i = 1 To size
+        'j = i + 2
+        Set tblRow = tblRows(i)
+        TLH_LaporanHarian(i).id = table.DataBodyRange(tblRow.index, int_personal_kolom_id)
+        TLH_LaporanHarian(i).Nama = table.DataBodyRange(tblRow.index, int_personal_kolom_nama)
+        TLH_LaporanHarian(i).Masuk = True
+        TLH_LaporanHarian(i).IKM = table.DataBodyRange(tblRow.index, int_personal_kolom_ikm)
+        TLH_LaporanHarian(i).AlasanJamMasukKelar = "REGULER"
+        
+        'cek in any valid absence reason is checked
+        If table.DataBodyRange(tblRow.index, int_personal_kolom_cuti) <> "" Then
+            Call UpdateAlasanTidakMasukHarian(table.DataBodyRange(tblRow.index, int_personal_kolom_cuti), _
+                                              "CUTI", i)
+        ElseIf table.DataBodyRange(tblRow.index, int_personal_kolom_izin) <> "" Then
+            Call UpdateAlasanTidakMasukHarian(table.DataBodyRange(tblRow.index, int_personal_kolom_izin), _
+                                              "IZIN", i)
+        ElseIf table.DataBodyRange(tblRow.index, int_personal_kolom_sakit) <> "" Then
+            Call UpdateAlasanTidakMasukHarian(table.DataBodyRange(tblRow.index, int_personal_kolom_sakit), _
+                                              "SAKIT", i)
+        ElseIf table.DataBodyRange(tblRow.index, int_personal_kolom_dltr) <> "" Then
+            Call UpdateAlasanTidakMasukHarian(table.DataBodyRange(tblRow.index, int_personal_kolom_dltr), _
+                                              "DLTR", i)
+        ElseIf table.DataBodyRange(tblRow.index, int_personal_kolom_dlnt) <> "" Then
+            Call UpdateAlasanTidakMasukHarian(table.DataBodyRange(tblRow.index, int_personal_kolom_dlnt), _
+                                              "DLNT", i)
+        ElseIf table.DataBodyRange(tblRow.index, int_personal_kolom_plth) <> "" Then
+            Call UpdateAlasanTidakMasukHarian(table.DataBodyRange(tblRow.index, int_personal_kolom_plth), _
+                                              "PLTH", i)
+        'ElseIf table.DataBodyRange(tblRow.index, int_personal_kolom_pengajian) <> "" Then
+            'Call UpdateAlasanTidakMasukHarian(table.DataBodyRange(tblRow.index, int_personal_kolom_pengajian), _
+                                              "Pengajian", i)
+                                                                              
+        ElseIf table.DataBodyRange(tblRow.index, int_personal_kolom_aktif) <> "" Then
+            Call UpdateAlasanTidakMasukHarian(table.DataBodyRange(tblRow.index, int_personal_kolom_aktif), _
+                                              "Aktif", i)
+        End If
+    Next i
+    
+    
+    'Baca Table Jadwal Reguler
+    Set table = Worksheets("Jadwal-Harian").ListObjects("T_Jadwal_Reguler_Harian")
+    Set tblRow = table.ListRows(1)
+    dat_jam_masuk = table.DataBodyRange(tblRow.index, 2)
+    dat_jam_keluar = table.DataBodyRange(tblRow.index, 3)
+
+    For i = 1 To size
+        Set tblRow = tblRows(i)
+        TLH_LaporanHarian(i).Jam_Masuk = dat_jam_masuk
+        TLH_LaporanHarian(i).Jam_Keluar = dat_jam_keluar
+    Next i
+    
+    'Baca Tabel T_Khusus
+    int_t_khusus_kolom_id = 5
+    int_t_khusus_kolom_jam_masuk = 3
+    int_t_khusus_kolom_jam_keluar = 4
+    int_t_khusus_kolom_alasan = 2
+    
+    Set table = Worksheets("Jadwal-Harian").ListObjects("T_Khusus_Harian")
+    Set tblRows = table.ListRows
+    Set tblRow = tblRows(1)
+    int_size_t_khusus = tblRows.Count
+
+    If int_size_t_khusus > 0 Then
+        For Each tblRow In tblRows 'i = 1 To int_size_t_khusus
+            str_t_khusus_id = table.DataBodyRange(tblRow.index, int_t_khusus_kolom_id)
+            dat_jam_masuk = table.DataBodyRange(tblRow.index, int_t_khusus_kolom_jam_masuk)
+            dat_jam_keluar = table.DataBodyRange(tblRow.index, int_t_khusus_kolom_jam_keluar)
+            aint_id = Split(str_t_khusus_id, ", ")
+            For j = 1 To size
+            For Each k In aint_id
+                If TLH_LaporanHarian(j).id = k Then
+                    TLH_LaporanHarian(j).Jam_Masuk = dat_jam_masuk
+                    TLH_LaporanHarian(j).Jam_Keluar = dat_jam_keluar
+                    TLH_LaporanHarian(j).AlasanJamMasukKelar = table.DataBodyRange(tblRow.index, int_t_khusus_kolom_alasan)
+                End If
+            Next k
+            Next j
+        'Next i
+        Next
+    End If
+        
+
+End Sub
+
+Sub ProcessRecordAbsenHarian()
+    Dim sh As Worksheet
+    Dim row As Range
+    Dim RowCount As Integer
+    Dim colCount As Integer
+    Dim dat_scan_masuk As Date
+    Dim dat_scan_keluar As Date
+    Dim i As Integer
+    Dim id As Integer
+    Dim index As Integer
+    Dim dbl_diff_keluar As Double
+    Dim dbl_diff_masuk As Double
+    Dim str_col_name As String
+    
+    Dim int_record_absen_kolom_id As Integer
+    Dim int_record_absen_kolom_scan_masuk As Integer
+    Dim int_record_absen_kolom_scan_keluar As Integer
+    
+    
+    Set sh = Worksheets("RecordAbsen-Harian")
+    Set row = sh.Rows(1)
+    
+    colCount = sh.UsedRange.Rows(1).Columns.Count
+    RowCount = sh.UsedRange.Rows.Count
+    
+    For i = 1 To colCount
+        str_col_name = row.Cells(1, i)
+        If InStr(str_col_name, "ID") <> 0 Then
+            int_record_absen_kolom_id = i
+        ElseIf InStr(str_col_name, "Masuk") <> 0 Then
+            int_record_absen_kolom_scan_masuk = i
+        ElseIf InStr(str_col_name, "Pulang") <> 0 Then
+            int_record_absen_kolom_scan_keluar = i
+        End If
+    Next i
+
+    
+    For i = 2 To RowCount 'skip row 1 since it's row 1 is a title
+        Set row = sh.Rows(i)
+        id = row.Cells(1, int_record_absen_kolom_id)
+        index = Get_Laporan_Harian_Index(id)
+        
+        If row.Cells(1, int_record_absen_kolom_scan_masuk) = "" Then
+            TLH_LaporanHarian(index).Scan_Masuk = CDate("00:00")
+        Else
+            TLH_LaporanHarian(index).Scan_Masuk = CDate(row.Cells(1, int_record_absen_kolom_scan_masuk))
+        End If
+        
+        If row.Cells(1, int_record_absen_kolom_scan_keluar) = "" Then
+            TLH_LaporanHarian(index).Scan_Keluar = CDate("00:00")
+        Else
+            TLH_LaporanHarian(index).Scan_Keluar = CDate(row.Cells(1, int_record_absen_kolom_scan_keluar))
+        End If
+    
+        If TLH_LaporanHarian(index).Masuk = True Then
+            If ((TLH_LaporanHarian(index).Scan_Masuk = CDate("00:00")) And (TLH_LaporanHarian(index).Scan_Keluar = CDate("00:00"))) Then
+                TLH_LaporanHarian(index).Masuk = False
+                TLH_LaporanHarian(index).AlasanTidakMasuk = "ALPA"
+            Else
+                If ((TLH_LaporanHarian(index).Scan_Masuk = CDate("00:00")) Or (TLH_LaporanHarian(index).Scan_Keluar = CDate("00:00"))) Then
+                    TLH_LaporanHarian(index).Tidak_Absen = True
+                End If
+
+                TLH_LaporanHarian(index).Telat_Masuk = (TLH_LaporanHarian(index).Scan_Masuk - TLH_LaporanHarian(index).Jam_Masuk) * 1440
+                TLH_LaporanHarian(index).Cepat_Pulang = (TLH_LaporanHarian(index).Jam_Keluar - TLH_LaporanHarian(index).Scan_Keluar) * 1440
+                If TLH_LaporanHarian(index).Telat_Masuk <= 0 Or TLH_LaporanHarian(index).Scan_Masuk = CDate("00:00") Then
+                    TLH_LaporanHarian(index).Telat_Masuk = 0
+                End If
+                If TLH_LaporanHarian(index).Cepat_Pulang <= 0 Or TLH_LaporanHarian(index).Scan_Keluar = CDate("00:00") Then
+                    TLH_LaporanHarian(index).Cepat_Pulang = 0
+                End If
+
+            End If
+
+        End If
+        
+    Next i
+
+
+End Sub
+
+Function Get_Laporan_Harian_Index(id As Integer) As Integer
+    Dim i As Integer
+    
+    Get_Laporan_Harian_Index = 0
+    For i = 1 To Int_Size_Laporan_Harian
+        If TLH_LaporanHarian(i).id = id Then
+            Get_Laporan_Harian_Index = i
+            Exit For
+        End If
+    Next i
+
+End Function
+
+Sub BuatLaporanAKhirHarian()
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim title As Range
+    Dim title1 As Range
+    Dim i As Integer
+    Dim j As Integer
+    Dim k As Integer
+    Dim l As Integer
+    Dim m As Integer
+    Dim n As Integer
+    Dim Tanggal As Date
+    Dim str_tanggal As String
+
+    Dim int_kolom_alasan_masuk As Integer
+    Dim int_kolom_telat_datang As Integer
+    Dim int_kolom_cepat_pulang As Integer
+    Dim int_kolom_tidak_absen As Integer
+    Dim int_kolom_ikm As Integer
+    
+
+    Dim var_arr() As Variant
+    Dim lng_row As Long
+    lng_row = Int_JumlahGukar + 10
+    Dim int_col As Integer
+
+    ReDim var_arr(Int_Size_Laporan_Harian + 1, 21)
+
+    Application.ScreenUpdating = False
+
+    i = MULAI_KOLOM_JUDUL_UMUM
+    var_arr(BARIS_JUDUL_1, i) = "Nomor"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Id"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Nama"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Piket"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Masuk"
+    i = i + 1
+    int_kolom_alasan_masuk = i
+    var_arr(BARIS_JUDUL_1, i) = "Alasan"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Jam Masuk"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Alasan Jam Masuk"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Scan Masuk"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Telat Masuk"
+    i = i + 1
+    int_kolom_telat_datang = i
+    var_arr(BARIS_JUDUL_1, i) = "Jam Keluar"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Alasan Jam Keluar"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Scan Keluar"
+    i = i + 1
+    var_arr(BARIS_JUDUL_1, i) = "Cepat Pulang"
+    i = i + 1
+    int_kolom_cepat_pulang = i
+    var_arr(BARIS_JUDUL_1, i) = "Tidak Absen"
+    i = i + 1
+    int_kolom_tidak_absen = i
+    var_arr(BARIS_JUDUL_1, i) = "IKM"
+    i = i + 1
+    int_kolom_ikm = i
+
+    int_col = i
+    ReDim Preserve var_arr(Int_Size_Laporan_Harian + 1, int_col)
+
+    For i = 1 To Int_Size_Laporan_Harian
+        'MULAI_KOLOM_JUDUL_UMUM = 0
+        j = 0
+        var_arr(i, j) = i
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).id
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).Nama
+        j = j + 1
+        'var_arr(i, j) = TLH_LaporanHarian(i).Piket
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).Masuk
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).AlasanTidakMasuk
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).Jam_Masuk
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).AlasanJamMasukKelar
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).Scan_Masuk
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).Telat_Masuk
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).Jam_Keluar
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).AlasanJamMasukKelar
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).Scan_Keluar
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).Cepat_Pulang
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).Tidak_Absen
+        j = j + 1
+        var_arr(i, j) = TLH_LaporanHarian(i).IKM
+    Next i
+
+    Set wb = ActiveWorkbook
+
+    Set ws = wb.Sheets.Add(Type:=xlWorksheet, After:=Application.ActiveSheet)
+    ws.Name = "Laporan-Harian"
+    Set title1 = ws.Range("A1")
+    title1.Resize(Int_Size_Laporan_Harian + 1, int_col).Value = var_arr
+    Application.DisplayAlerts = False
+
+    ws.Cells.EntireColumn.AutoFit
+    
+    With ws.Range(Cells(1, 1), Cells(Int_Size_Laporan_Harian + 1, int_col))
+        .Font.size = 8
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlBottom
+    End With
+    
+    With ws.Range(Cells(1, 1), Cells(1, int_col)) ' warna TITLE
+        With .Interior
+                .Pattern = xlSolid
+                .PatternColorIndex = xlAutomatic
+                .Color = 5296274
+                .TintAndShade = 0
+                .PatternTintAndShade = 0
+        End With
+        .Font.Bold = True
+    End With
+    
+    For i = 1 To Int_Size_Laporan_Harian
+        
+        'periksa masuk/tidak masuk
+        If TLH_LaporanHarian(i).AlasanTidakMasuk <> "" And TLH_LaporanHarian(i).AlasanTidakMasuk = "ALPA" Then
+            ws.Cells(i + 1, int_kolom_alasan_masuk).Interior.Color = vbRed
+        End If
+        If TLH_LaporanHarian(i).AlasanTidakMasuk <> "" And TLH_LaporanHarian(i).AlasanTidakMasuk <> "ALPA" Then
+            ws.Cells(i + 1, int_kolom_alasan_masuk).Interior.Color = vbBlue
+        End If
+    
+        If TLH_LaporanHarian(i).Telat_Masuk <> 0 Then
+            ws.Cells(i + 1, int_kolom_telat_datang).Interior.Color = vbRed
+        End If
+
+        If TLH_LaporanHarian(i).Cepat_Pulang <> 0 Then
+            ws.Cells(i + 1, int_kolom_cepat_pulang).Interior.Color = vbRed
+        End If
+    
+        If TLH_LaporanHarian(i).Tidak_Absen = True Then
+            ws.Cells(i + 1, int_kolom_tidak_absen).Interior.Color = vbRed
+        End If
+        
+        If TLH_LaporanHarian(i).IKM <> 0 Then
+            ws.Cells(i + 1, int_kolom_ikm).Interior.Color = vbRed
+        End If
+    
+    Next i
+    
+Application.DisplayAlerts = True
+
+End Sub
+
+Sub UpdateAlasanTidakMasukHarian(str_input As String, str_alasan As String, gukar_index As Integer)
+    Dim str_izin As String
+
+    str_izin = UCase(Trim(str_input))
+    If InStr(str_izin, "Y") = 1 Then
+        TLH_LaporanHarian(gukar_index).Masuk = False
+        TLH_LaporanHarian(gukar_index).AlasanTidakMasuk = str_alasan
+    End If
+End Sub
+
+Function WorksheetExists(shtName As String, Optional wb As Workbook) As Boolean
+    Dim sht As Worksheet
+
+    If wb Is Nothing Then Set wb = ThisWorkbook
+    On Error Resume Next
+    Set sht = wb.Sheets(shtName)
+    On Error GoTo 0
+    WorksheetExists = Not sht Is Nothing
+End Function
